@@ -1,8 +1,6 @@
 import { Molecule } from "openchemlib";
 import Color from "color";
 import sharp from "sharp";
-import { MessageAttachment } from "discord.js";
-import { createHash } from "crypto";
 
 const rgb = /rgb\((\d+),(\d+),(\d+)\)/g;
 
@@ -22,8 +20,6 @@ export const openchemlibImage = async (
   mol: Molecule,
   background: Color = Color("#1A1C20", "hex")
 ): Promise<Buffer> => {
-  // const smilesHash = createHash("sha256").update(mol.toSmiles()).digest("base64");
-
   //TODO: use a database
 
   let svg = mol.toSVG(300, 200);
