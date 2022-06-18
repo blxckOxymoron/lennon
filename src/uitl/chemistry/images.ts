@@ -2,7 +2,6 @@ import { Molecule } from "openchemlib";
 import sharp from "sharp";
 import { writeFile } from "node:fs/promises";
 import { prisma } from "../../lib";
-import { createHash } from "node:crypto";
 import { moleculeHash } from "./molecule";
 
 type GeneratorFunction = (mol: Molecule) => Promise<Buffer | URL>;

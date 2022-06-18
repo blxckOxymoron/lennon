@@ -6,8 +6,6 @@ import {
   CommandInteraction,
   MessageAttachment,
 } from "discord.js";
-import { createHash } from "node:crypto";
-import { setTimeout } from "node:timers/promises";
 import { prisma } from "../../lib";
 import {
   autocomplete,
