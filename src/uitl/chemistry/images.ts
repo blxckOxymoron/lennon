@@ -1,28 +1,47 @@
 import { Molecule } from "openchemlib";
-import Color from "color";
 import sharp from "sharp";
+import { writeFile } from "node:fs/promises";
 
-const rgb = /rgb\((\d+),(\d+),(\d+)\)/g;
-
-const recolorSvg = (svg: string, bg: Color) => {
-  return svg.replaceAll(rgb, (_, r, g, b) => {
-    let clr = Color.rgb(+r, +g, +b);
-
-    if (clr.contrast(bg) < 3) {
-      clr = clr.negate();
-    }
-
-    return clr.string();
-  });
+const colorReplacements = {
+  "rgb(192,0,255)": "rgb(246,246,246)",
+  "rgb(0,0,0)": "rgb(255,255,255)",
 };
 
-export const openchemlibImage = async (
-  mol: Molecule,
-  background: Color = Color("#1A1C20", "hex")
-): Promise<Buffer> => {
+const oldLineColor = /rgb\(192,0,255\)|rgb\(0,0,0\)/g;
+const newLineColor = "rgb(255,255,255)";
+
+const editSvg = (svg: string) => {
+  return svg.replaceAll(oldLineColor, newLineColor).replaceAll(" Helvetica", "Inter");
+};
+
+const openchemlibImage = async (mol: Molecule): Promise<Buffer> => {
   //TODO: use a database
 
-  let svg = mol.toSVG(300, 200);
-  svg = recolorSvg(svg, background);
-  return sharp(svg).png().toBuffer();
+  let svg = mol.toSVG(300, 200, undefined, {
+    strokeWidth: "2",
+    fontWeight: "800",
+    highlightQueryFeatures: false,
+    showSymmetryDiastereotopic: false,
+    showSymmetryEnantiotopic: false,
+    showSymmetrySimple: false,
+    suppressChiralText: true,
+    suppressCIPParity: true,
+    suppressESR: true,
+    autoCrop: true,
+  });
+  svg = editSvg(svg);
+  writeFile(`P:/TypeScript/lennon/tmp/${Date.now()}.svg`, svg);
+  return sharp(Buffer.from(svg)).png().toBuffer();
+};
+
+export enum ImageGenerator {
+  Openchemlib = "openchemlib",
+}
+
+const generators: Record<ImageGenerator, (mol: Molecule) => Promise<Buffer | URL>> = {
+  openchemlib: openchemlibImage,
+};
+
+export const generateImage = (mol: Molecule, generator: ImageGenerator) => {
+  return generators[generator](mol);
 };

@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions } from "@sapphire/framework";
+import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import { CommandInteraction } from "discord.js";
 
 @ApplyOptions<CommandOptions>({
@@ -9,9 +9,7 @@ import { CommandInteraction } from "discord.js";
   enabled: true,
   chatInputCommand: {
     register: true,
-    descriptionLocalizations: {
-      de: "Sendet einen Ping an den Bot.",
-    },
+    // behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
   },
 })
 export class MoleculeCommand extends Command {
