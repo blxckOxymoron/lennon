@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
+import { Command, CommandOptions } from "@sapphire/framework";
 import { CommandInteraction } from "discord.js";
 
 @ApplyOptions<CommandOptions>({

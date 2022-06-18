@@ -1,21 +1,37 @@
 import { Molecule } from "openchemlib";
 import sharp from "sharp";
 import { writeFile } from "node:fs/promises";
+import { prisma } from "../../lib";
+import { createHash } from "node:crypto";
+import { moleculeHash } from "./molecule";
+
+type GeneratorFunction = (mol: Molecule) => Promise<Buffer | URL>;
 
 const colorReplacements = {
-  "rgb(192,0,255)": "rgb(246,246,246)",
+  "rgb(192,0,255)": "rgb(185,187,190)",
   "rgb(0,0,0)": "rgb(255,255,255)",
 };
 
-const oldLineColor = /rgb\(192,0,255\)|rgb\(0,0,0\)/g;
-const newLineColor = "rgb(255,255,255)";
-
 const editSvg = (svg: string) => {
-  return svg.replaceAll(oldLineColor, newLineColor).replaceAll(" Helvetica", "Inter");
+  for (const [from, to] of Object.entries(colorReplacements)) {
+    svg = svg.replaceAll(from, to);
+  }
+  return svg;
 };
 
-const openchemlibImage = async (mol: Molecule): Promise<Buffer> => {
+const openchemlibImage: GeneratorFunction = async mol => {
   //TODO: use a database
+
+  const cached = await prisma.image.findFirst({
+    where: {
+      key: moleculeHash(mol),
+      type: ImageGenerator.Openchemlib,
+    },
+    select: {
+      url: true,
+    },
+  });
+  if (cached) return new URL(cached.url);
 
   let svg = mol.toSVG(300, 200, undefined, {
     strokeWidth: "2",
@@ -38,7 +54,7 @@ export enum ImageGenerator {
   Openchemlib = "openchemlib",
 }
 
-const generators: Record<ImageGenerator, (mol: Molecule) => Promise<Buffer | URL>> = {
+const generators: Record<ImageGenerator, GeneratorFunction> = {
   openchemlib: openchemlibImage,
 };
 

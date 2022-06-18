@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import ocl from "openchemlib";
 const { Molecule } = ocl;
 
@@ -55,4 +56,8 @@ const findMoleculeCactus = async (query: string): Promise<MoleculeResult | undef
 
 export const findMolecule = async (query: string): Promise<MoleculeResult | undefined> => {
   return (await findMoleculePubchem(query)) ?? (await findMoleculeCactus(query));
+};
+
+export const moleculeHash = (molecule: ocl.Molecule): Buffer => {
+  return createHash("sha256").update(molecule.toMolfile()).digest();
 };

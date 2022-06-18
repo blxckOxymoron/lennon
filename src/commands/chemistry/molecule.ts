@@ -1,7 +1,21 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions } from "@sapphire/framework";
-import { AutocompleteInteraction, CommandInteraction, MessageAttachment } from "discord.js";
-import { autocomplete, findMolecule, generateImage, ImageGenerator } from "../../uitl/chemistry";
+import {
+  AutocompleteInteraction,
+  Collection,
+  CommandInteraction,
+  MessageAttachment,
+} from "discord.js";
+import { createHash } from "node:crypto";
+import { setTimeout } from "node:timers/promises";
+import { prisma } from "../../lib";
+import {
+  autocomplete,
+  findMolecule,
+  generateImage,
+  ImageGenerator,
+  moleculeHash,
+} from "../../uitl/chemistry";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
 
 @ApplyOptions<CommandOptions>({
@@ -51,11 +65,24 @@ export class MoleculeCommand extends Command {
       this.replaceSpecial(query) + ".png"
     ).setDescription(`the molecule from the query: '${query}'`);
 
-    await interaction.editReply({ content: `**${query}**`, files: [attachment] });
+    const imageMessage = await interaction.editReply({
+      content: `**${query}**`,
+      files: [attachment],
+    });
 
-    this.container.logger.info(
-      `Generated image for ${query} -> ${attachment.url} | ${attachment.proxyURL}`
-    );
+    if (!(imageMessage.attachments instanceof Collection)) return;
+
+    const url = imageMessage.attachments.first()?.proxyURL;
+    if (!url) return this.container.logger.warn("No proxyURL found.");
+
+    prisma.image.create({
+      data: {
+        key: moleculeHash(result.molecule),
+        name: query,
+        type: generator,
+        url,
+      },
+    });
   }
 
   public override async autocompleteRun(interaction: AutocompleteInteraction) {
@@ -74,7 +101,7 @@ export class MoleculeCommand extends Command {
       // autocomplete for query
       const options = await autocomplete(query);
 
-      return interaction.respond(options.map(k => ({ name: k, value: k.toLowerCase() })));
+      return interaction.respond(options.map(k => ({ name: k, value: k })));
     }
   }
 
