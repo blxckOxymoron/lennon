@@ -1,6 +1,7 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions } from "@sapphire/framework";
 import { AutocompleteInteraction, CommandInteraction } from "discord.js";
+import { invitePermissions } from "../../lib";
 import { nameAndVal } from "../../uitl/discord/interactions";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
 import tutorials from "../../uitl/tutorials";
@@ -22,9 +23,15 @@ export class TutorialCommand extends Command {
       // Overview of all tutorials
       return interaction.reply(
         ephemeralEmbed(
-          ThemedEmbeds.Primary("Tutorials:").addFields(
-            this.commandNames.map(name => ({ name, value: `/tutorial ${name}`, inline: true }))
-          )
+          ThemedEmbeds.Primary("Tutorials:")
+            .addFields(
+              this.commandNames.map(name => ({ name, value: `/tutorial ${name}`, inline: true }))
+            )
+            .addField(
+              "Links",
+              "[Github](https://github.com/blxckOxymoron/lennon) | " +
+                `[Invite](${this.container.client.generateInvite(invitePermissions)})`
+            )
         )
       );
     } else {

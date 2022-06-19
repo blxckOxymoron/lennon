@@ -1,5 +1,5 @@
 import { LogLevel, SapphireClient, Logger } from "@sapphire/framework";
-import { Intents } from "discord.js";
+import { Intents, InviteGenerationOptions, Permissions } from "discord.js";
 import { Config } from "./config";
 import chalk from "chalk";
 
@@ -24,6 +24,18 @@ export class Lennon extends SapphireClient {
     await this.login(Config.CLIENT_TOKEN);
   }
 }
+
+export const invitePermissions: InviteGenerationOptions = {
+  scopes: ["bot", "applications.commands"],
+  permissions: [
+    Permissions.FLAGS.ATTACH_FILES,
+    Permissions.FLAGS.CREATE_INSTANT_INVITE,
+    Permissions.FLAGS.MANAGE_THREADS,
+    Permissions.FLAGS.EMBED_LINKS,
+    Permissions.FLAGS.MANAGE_ROLES,
+    Permissions.FLAGS.SEND_MESSAGES, // maybe not
+  ],
+};
 
 class ColorLogger extends Logger {
   colors = {
