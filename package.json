@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "main": "dist/main.js",
   "scripts": {
-    "start": "node .",
-    "prisma": "pnpx prisma migrate reset",
+    "dev": "node .",
+    "start": "pnpm run prisma && node dist/main.js",
+    "prisma": "pnpx prisma migrate",
     "prisma:studio": "pnpx prisma studio",
     "stats": "cloc src"
   },
