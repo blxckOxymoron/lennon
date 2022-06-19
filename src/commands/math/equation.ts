@@ -1,10 +1,21 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions, UserError } from "@sapphire/framework";
-import { Collection, CommandInteraction, MessageAttachment } from "discord.js";
+import { Command, CommandOptions, RegisterBehavior, UserError } from "@sapphire/framework";
+import {
+  ApplicationCommandOptionChoiceData,
+  AutocompleteInteraction,
+  Collection,
+  CommandInteraction,
+  MessageAttachment,
+} from "discord.js";
 import { prisma } from "../../lib";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
 import { CachedImage } from "../../uitl/image";
 import { generateImage, getTexName, texHash } from "../../uitl/math";
+
+type AdditionalData = {
+  query: string;
+  creatorId: string;
+};
 
 @ApplyOptions<CommandOptions>({
   name: "equation",
@@ -19,8 +30,8 @@ export class EquationCommand extends Command {
   }
 
   public override async chatInputRun(interaction: CommandInteraction) {
-    const query = interaction.options.getString("text");
-    const title = interaction.options.getString("title");
+    const query = interaction.options.getString("text")?.replaceAll(/ +/g, " ")?.trim();
+    const title = interaction.options.getString("title")?.replaceAll(/ +/g, " ")?.trim();
     if (!query) return;
 
     await interaction.deferReply();
@@ -30,9 +41,10 @@ export class EquationCommand extends Command {
     if (render instanceof Error) {
       await interaction.deleteReply();
 
-      return interaction.followUp(
+      await interaction.followUp(
         ephemeralEmbed(ThemedEmbeds.Error("Invalid equation: " + render.message).setTitle(query))
       );
+      return;
     }
 
     const responseMethod = title ? "followUp" : "editReply";
@@ -40,7 +52,7 @@ export class EquationCommand extends Command {
     if (render instanceof URL) {
       interaction[responseMethod](render.href);
     } else {
-      const name = await getTexName(query);
+      const name = title || (await getTexName(query));
 
       const attachment = new MessageAttachment(
         render,
@@ -55,19 +67,65 @@ export class EquationCommand extends Command {
         throw new TypeError("attachments different than expected");
 
       const url = imageMessage.attachments.first()?.proxyURL;
-      if (!url) return this.container.logger.warn("No proxyURL found.");
-
-      await prisma.image.create({
-        data: {
-          key: texHash(query),
-          name: query,
-          type: CachedImage.Equation,
-          url,
-        },
-      });
+      if (!url) this.container.logger.warn("No proxyURL found.");
+      else {
+        const creatorId = interaction.user.id;
+        const metadata: AdditionalData = { query, creatorId };
+        await prisma.image.create({
+          data: {
+            key: texHash(query),
+            name: title || query,
+            type: CachedImage.Equation,
+            data: JSON.stringify(metadata),
+            url,
+          },
+        });
+      }
     }
 
     if (title) await interaction.editReply(`**${title}**`);
+  }
+
+  examples: ApplicationCommandOptionChoiceData[] = [
+    { name: "Freier Fall", value: "s(t) = \\frac12 * g * t^2 + t * a + s_0" },
+    { name: "Mitternachtsformel", value: "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}" },
+    { name: "Brüche", value: "\\frac{1}{2} + \\frac12 + {1 \\over 3} + \\dfrac{1}{4}" },
+  ];
+
+  public override async autocompleteRun(interaction: AutocompleteInteraction) {
+    const query = interaction.options.getString("text");
+    if (query === null) return;
+
+    if (query.length < 3) return interaction.respond(this.examples);
+
+    const suggestions = await prisma.image.findMany({
+      where: {
+        name: {
+          contains: query,
+        },
+        type: CachedImage.Equation,
+      },
+      select: {
+        data: true,
+        name: true,
+      },
+    });
+
+    const mappedSuggestions = await Promise.all(
+      suggestions.map(async ({ name, data }) => {
+        const { query, creatorId } = JSON.parse(data) as AdditionalData;
+        const creator = await this.container.client.users.fetch(creatorId);
+        return {
+          name: `${name} (by ${creator.tag})`,
+          value: query,
+        };
+      })
+    );
+
+    interaction.respond([
+      { name: "!! Community Suggestions - not checked !!", value: "danger" },
+      ...mappedSuggestions,
+    ]);
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
@@ -79,6 +137,7 @@ export class EquationCommand extends Command {
           opt
             .setName("text")
             .setDescription("The math equaltion to be displayed.")
+            .setAutocomplete(true)
             .setRequired(true)
         )
         .addStringOption(opt =>

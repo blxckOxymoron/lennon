@@ -16,5 +16,6 @@ model Image {
   name      String
   type      String
   url       String
+  data      String   @default("{}")
   createdAt DateTime @default(now())
 }

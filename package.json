@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node .",
     "prisma": "pnpx prisma migrate reset",
-    "prisma:studio": "pnpx prisma studio"
+    "prisma:studio": "pnpx prisma studio",
+    "stats": "cloc src"
   },
   "dependencies": {
     "@prisma/client": "^3.15.2",
