@@ -70,36 +70,26 @@ export class MoleculeCommand extends Command {
   public override async autocompleteRun(interaction: AutocompleteInteraction) {
     const query = interaction.options.getString("query");
 
-    if (query) {
-      // autocomplete for query
-      const options = await autocomplete(query);
+    if (query === null) return;
 
-      return interaction.respond(options.map(k => ({ name: k, value: k })));
-    }
+    // autocomplete for query
+    const options = await autocomplete(query);
+
+    return interaction.respond(options.map(k => ({ name: k, value: k })));
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
-    registry.registerChatInputCommand(
-      builder =>
-        builder
-          .setName(this.name)
-          .setDescription(this.description)
-          .addStringOption(opt =>
-            opt
-              .setName("query")
-              .setDescription("The name of the molecule.")
-              .setRequired(true)
-              .setAutocomplete(true)
-          )
-          .addStringOption(opt =>
-            opt
-              .setName("generator")
-              .setDescription("The method used to generate the image.")
-              .setAutocomplete(true)
-          ),
-      {
-        // behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
-      }
+    registry.registerChatInputCommand(builder =>
+      builder
+        .setName(this.name)
+        .setDescription(this.description)
+        .addStringOption(opt =>
+          opt
+            .setName("query")
+            .setDescription("The name of the molecule.")
+            .setRequired(true)
+            .setAutocomplete(true)
+        )
     );
   }
 }

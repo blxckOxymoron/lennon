@@ -12,8 +12,17 @@ type AutocompleteResponse = {
   };
 };
 
+const autocompleteInspiration = [
+  "Type at least 3 letters to get more suggestions.",
+  "Glucose",
+  "Vitamin B1",
+  "Vitamin C",
+  "Adrenaline",
+  "Pentanol",
+];
+
 export const autocomplete = async (query: string): Promise<string[]> => {
-  if (query.length < 3) return [];
+  if (query.length < 3) return autocompleteInspiration;
   const response: AutocompleteResponse | undefined = await fetch(
     `https://pubchem.ncbi.nlm.nih.gov/rest/autocomplete/compound/${query}`
   ).then(res => (res.ok ? res.json() : undefined));

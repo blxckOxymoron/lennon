@@ -24,9 +24,14 @@ export class EquationCommand extends Command {
 
     await interaction.deferReply();
 
-    const render = await generateImage(query).catch(() => null);
+    const render = await generateImage(query).catch((e: Error) => e);
 
-    if (!render) return interaction.reply(ephemeralEmbed(ThemedEmbeds.Error("Invalid equation.")));
+    if (render instanceof Error) {
+      await interaction.editReply(`\`${query}\``);
+      return interaction.followUp(
+        ephemeralEmbed(ThemedEmbeds.Error("Invalid equation: " + render.message).setTitle(query))
+      );
+    }
 
     if (render instanceof URL) {
       return interaction.editReply(render.href);

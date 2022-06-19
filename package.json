@@ -20,7 +20,8 @@
     "discord.js": "^13.7.0",
     "dotenv": "^16.0.1",
     "openchemlib": "^7.4.3",
-    "sharp": "^0.30.6"
+    "sharp": "^0.30.6",
+    "twemoji": "^14.0.2"
   },
   "devDependencies": {
     "@types/color": "^3.0.3",
