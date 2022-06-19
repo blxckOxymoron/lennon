@@ -4,7 +4,7 @@
   "main": "dist/main.js",
   "scripts": {
     "start": "node .",
-    "prisma": "pnpx prisma db push"
+    "prisma": "pnpx prisma migrate reset"
   },
   "dependencies": {
     "@prisma/client": "^3.15.2",

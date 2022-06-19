@@ -3,22 +3,12 @@ import sharp from "sharp";
 import { writeFile } from "node:fs/promises";
 import { prisma } from "../../lib";
 import { moleculeHash } from "./molecule";
+import { recolorSVG } from "../svg";
+import { RenderFunction } from "../svg";
 
-type GeneratorFunction = (mol: Molecule) => Promise<Buffer | URL>;
+type MoleculeRenderer = RenderFunction<Molecule>;
 
-const colorReplacements = {
-  "rgb(192,0,255)": "rgb(185,187,190)",
-  "rgb(0,0,0)": "rgb(255,255,255)",
-};
-
-const editSvg = (svg: string) => {
-  for (const [from, to] of Object.entries(colorReplacements)) {
-    svg = svg.replaceAll(from, to);
-  }
-  return svg;
-};
-
-const openchemlibImage: GeneratorFunction = async mol => {
+const openchemlibImage: MoleculeRenderer = async mol => {
   //TODO: use a database
 
   const cached = await prisma.image.findFirst({
@@ -44,7 +34,7 @@ const openchemlibImage: GeneratorFunction = async mol => {
     suppressESR: true,
     autoCrop: true,
   });
-  svg = editSvg(svg);
+  svg = recolorSVG(svg);
   writeFile(`P:/TypeScript/lennon/tmp/${Date.now()}.svg`, svg);
   return sharp(Buffer.from(svg)).png().toBuffer();
 };
@@ -53,7 +43,7 @@ export enum ImageGenerator {
   Openchemlib = "openchemlib",
 }
 
-const generators: Record<ImageGenerator, GeneratorFunction> = {
+const generators: Record<ImageGenerator, MoleculeRenderer> = {
   openchemlib: openchemlibImage,
 };
 

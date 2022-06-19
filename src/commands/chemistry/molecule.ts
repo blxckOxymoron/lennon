@@ -21,6 +21,9 @@ import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
   description: "Displays the inputed molecule.",
   fullCategory: ["Chemistry"],
   enabled: true,
+  chatInputCommand: {
+    register: true,
+  },
 })
 export class MoleculeCommand extends Command {
   private findGenerator(query: string): ImageGenerator | undefined {
@@ -53,8 +56,9 @@ export class MoleculeCommand extends Command {
     await interaction.deferReply();
 
     const render = await generateImage(result.molecule, generator);
+    await interaction.editReply(`**${query}**`);
+
     if (render instanceof URL) {
-      await interaction.editReply(`**${query}**`);
       return interaction.followUp(render.href);
     }
 
@@ -63,8 +67,7 @@ export class MoleculeCommand extends Command {
       this.replaceSpecial(query) + ".png"
     ).setDescription(`the molecule from the query: '${query}'`);
 
-    const imageMessage = await interaction.editReply({
-      content: `**${query}**`,
+    const imageMessage = await interaction.followUp({
       files: [attachment],
     });
 
@@ -73,7 +76,7 @@ export class MoleculeCommand extends Command {
     const url = imageMessage.attachments.first()?.proxyURL;
     if (!url) return this.container.logger.warn("No proxyURL found.");
 
-    prisma.image.create({
+    await prisma.image.create({
       data: {
         key: moleculeHash(result.molecule),
         name: query,
