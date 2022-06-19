@@ -37,34 +37,35 @@ export class MoleculeCommand extends Command {
     await interaction.deferReply();
 
     const render = await generateImage(result.molecule);
-    await interaction.editReply(`**${query}**`);
 
     if (render instanceof URL) {
-      return interaction.followUp(render.href);
+      interaction.followUp(render.href);
+    } else {
+      const attachment = new MessageAttachment(
+        render,
+        this.replaceSpecial(query) + ".png"
+      ).setDescription(`the molecule from the query: '${query}'`);
+
+      const imageMessage = await interaction.followUp({
+        files: [attachment],
+      });
+
+      if (!(imageMessage.attachments instanceof Collection)) return;
+
+      const url = imageMessage.attachments.first()?.proxyURL;
+      if (!url) return this.container.logger.warn("No proxyURL found.");
+
+      await prisma.image.create({
+        data: {
+          key: moleculeHash(result.molecule),
+          name: query,
+          type: CachedImage.Molecule,
+          url,
+        },
+      });
     }
 
-    const attachment = new MessageAttachment(
-      render,
-      this.replaceSpecial(query) + ".png"
-    ).setDescription(`the molecule from the query: '${query}'`);
-
-    const imageMessage = await interaction.followUp({
-      files: [attachment],
-    });
-
-    if (!(imageMessage.attachments instanceof Collection)) return;
-
-    const url = imageMessage.attachments.first()?.proxyURL;
-    if (!url) return this.container.logger.warn("No proxyURL found.");
-
-    await prisma.image.create({
-      data: {
-        key: moleculeHash(result.molecule),
-        name: query,
-        type: CachedImage.Molecule,
-        url,
-      },
-    });
+    await interaction.editReply(`**${query}**`); // edit it later to have bouth messages on the same 'stack'
   }
 
   public override async autocompleteRun(interaction: AutocompleteInteraction) {

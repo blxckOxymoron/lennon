@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions } from "@sapphire/framework";
+import { Command, CommandOptions, UserError } from "@sapphire/framework";
 import { Collection, CommandInteraction, MessageAttachment } from "discord.js";
 import { prisma } from "../../lib";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
@@ -20,6 +20,7 @@ export class EquationCommand extends Command {
 
   public override async chatInputRun(interaction: CommandInteraction) {
     const query = interaction.options.getString("text");
+    const title = interaction.options.getString("title");
     if (!query) return;
 
     await interaction.deferReply();
@@ -34,33 +35,39 @@ export class EquationCommand extends Command {
       );
     }
 
+    const responseMethod = title ? "followUp" : "editReply";
+
     if (render instanceof URL) {
-      return interaction.editReply(render.href);
+      interaction[responseMethod](render.href);
+    } else {
+      const name = await getTexName(query);
+
+      const attachment = new MessageAttachment(
+        render,
+        this.formatName(name) + ".png"
+      ).setDescription(name.slice(0, 64));
+
+      let imageMessage = await interaction[responseMethod]({
+        files: [attachment],
+      });
+
+      if (!(imageMessage.attachments instanceof Collection))
+        throw new TypeError("attachments different than expected");
+
+      const url = imageMessage.attachments.first()?.proxyURL;
+      if (!url) return this.container.logger.warn("No proxyURL found.");
+
+      await prisma.image.create({
+        data: {
+          key: texHash(query),
+          name: query,
+          type: CachedImage.Equation,
+          url,
+        },
+      });
     }
 
-    const name = await getTexName(query);
-
-    const attachment = new MessageAttachment(render, this.formatName(name) + ".png").setDescription(
-      name.slice(0, 64)
-    );
-
-    const imageMessage = await interaction.editReply({
-      files: [attachment],
-    });
-
-    if (!(imageMessage.attachments instanceof Collection)) return;
-
-    const url = imageMessage.attachments.first()?.proxyURL;
-    if (!url) return this.container.logger.warn("No proxyURL found.");
-
-    await prisma.image.create({
-      data: {
-        key: texHash(query),
-        name: query,
-        type: CachedImage.Equation,
-        url,
-      },
-    });
+    if (title) await interaction.editReply(`**${title}**`);
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
@@ -73,6 +80,9 @@ export class EquationCommand extends Command {
             .setName("text")
             .setDescription("The math equaltion to be displayed.")
             .setRequired(true)
+        )
+        .addStringOption(opt =>
+          opt.setName("title").setDescription("A title to be displayed above the equation.")
         )
     );
   }
