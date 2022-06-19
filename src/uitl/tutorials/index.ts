@@ -1,5 +1,6 @@
 import molecule from "./molecule";
 import equation from "./equation";
+import timer from "./timer";
 
 export type Tutorial = {
   name: string;
@@ -9,6 +10,6 @@ export type Tutorial = {
   };
 };
 
-const tutorials: Tutorial[] = [molecule, equation];
+const tutorials: Tutorial[] = [molecule, equation, timer];
 
 export default tutorials;

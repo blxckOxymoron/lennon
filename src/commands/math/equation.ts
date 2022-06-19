@@ -19,15 +19,16 @@ export class EquationCommand extends Command {
   }
 
   public override async chatInputRun(interaction: CommandInteraction) {
-    const query = interaction.options.getString("text")?.trim();
-    if (!query) return interaction.reply(ephemeralEmbed(ThemedEmbeds.Error("No query provided.")));
+    const query = interaction.options.getString("text");
+    if (!query) return;
 
     await interaction.deferReply();
 
     const render = await generateImage(query).catch((e: Error) => e);
 
     if (render instanceof Error) {
-      await interaction.editReply(`\`${query}\``);
+      await interaction.deleteReply();
+
       return interaction.followUp(
         ephemeralEmbed(ThemedEmbeds.Error("Invalid equation: " + render.message).setTitle(query))
       );
