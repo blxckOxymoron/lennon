@@ -1,6 +1,7 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions } from "@sapphire/framework";
 import { AutocompleteInteraction, CommandInteraction } from "discord.js";
+import { nameAndVal } from "../../uitl/discord/interactions";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
 import tutorials from "../../uitl/tutorials";
 
@@ -13,7 +14,7 @@ import tutorials from "../../uitl/tutorials";
 })
 export class TutorialCommand extends Command {
   commandNames = tutorials.map(t => t.name);
-  commandNamesAllResponse = this.commandNames.map(c => ({ name: c, value: c }));
+  commandNamesAllResponse = this.commandNames.map(nameAndVal);
 
   public override async chatInputRun(interaction: CommandInteraction) {
     const command = interaction.options.getString("command")?.trim();
@@ -52,7 +53,7 @@ export class TutorialCommand extends Command {
     if (!command) return interaction.respond(this.commandNamesAllResponse);
 
     const filtered = this.commandNames.filter(c => c.startsWith(command));
-    if (filtered.length > 0) return interaction.respond(filtered.map(c => ({ name: c, value: c })));
+    if (filtered.length > 0) return interaction.respond(filtered.map(nameAndVal));
     else return interaction.respond(this.commandNamesAllResponse);
   }
 
