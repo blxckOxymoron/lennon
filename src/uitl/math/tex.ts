@@ -1,7 +1,8 @@
 import { createHash } from "crypto";
+import sharp from "sharp";
 import { URLSearchParams } from "url";
 import { prisma } from "../../lib";
-import { RenderFunction } from "../svg";
+import { CachedImage, RenderFunction } from "../image";
 
 type MathRenderer = RenderFunction<string>;
 
@@ -15,7 +16,7 @@ export const generateImage: MathRenderer = async equation => {
   const cached = await prisma.image.findFirst({
     where: {
       key,
-      type: "mathoid",
+      type: CachedImage.Equation,
     },
     select: {
       url: true,
@@ -41,7 +42,7 @@ export const generateImage: MathRenderer = async equation => {
     return res.arrayBuffer();
   });
 
-  return Buffer.from(png);
+  return sharp(Buffer.from(png)).normalise().negate({ alpha: false }).toBuffer();
 };
 
 export const getTexName = async (equation: string) => {

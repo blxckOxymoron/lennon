@@ -3,6 +3,7 @@ import { Command, CommandOptions } from "@sapphire/framework";
 import { Collection, CommandInteraction, MessageAttachment } from "discord.js";
 import { prisma } from "../../lib";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
+import { CachedImage } from "../../uitl/image";
 import { generateImage, getTexName, texHash } from "../../uitl/math";
 
 @ApplyOptions<CommandOptions>({
@@ -10,9 +11,7 @@ import { generateImage, getTexName, texHash } from "../../uitl/math";
   description: "Displays the inputed equation.",
   fullCategory: ["Math"],
   enabled: true,
-  chatInputCommand: {
-    register: true,
-  },
+  chatInputCommand: { register: true },
 })
 export class EquationCommand extends Command {
   private formatName(query: string): string {
@@ -52,7 +51,7 @@ export class EquationCommand extends Command {
       data: {
         key: texHash(query),
         name: query,
-        type: "mathoid",
+        type: CachedImage.Equation,
         url,
       },
     });
