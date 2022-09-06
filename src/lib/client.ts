@@ -29,7 +29,7 @@ export class Lennon extends SapphireClient {
     });
   }
 
-  public async start(): Promise<void> {
+  public async start() {
     await this.login(Config.CLIENT_TOKEN);
   }
 }

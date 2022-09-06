@@ -80,17 +80,19 @@ export class MoleculeCommand extends Command {
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
-    registry.registerChatInputCommand(builder =>
-      builder
-        .setName(this.name)
-        .setDescription(this.description)
-        .addStringOption(opt =>
-          opt
-            .setName("query")
-            .setDescription("The name of the molecule.")
-            .setRequired(true)
-            .setAutocomplete(true)
-        )
+    registry.registerChatInputCommand(
+      builder =>
+        builder
+          .setName(this.name)
+          .setDescription(this.description)
+          .addStringOption(opt =>
+            opt
+              .setName("query")
+              .setDescription("The name of the molecule.")
+              .setRequired(true)
+              .setAutocomplete(true)
+          )
+      // { behaviorWhenNotIdentical: RegisterBehavior.Overwrite }
     );
   }
 }

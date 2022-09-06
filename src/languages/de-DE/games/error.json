@@ -1,0 +1,13 @@
+{
+  "invalid_move": "Ungültiger Zug",
+  "invalid_player": "Es ist nicht dein Zug",
+  "game_not_running": "Das Spiel läuft gerade nicht",
+  "not_in_game": "Du spielst gerade nicht mit",
+  "custom": "Ein Fehler ist aufgetreten",
+
+  "game_already_started": "Das Spiel hat bereits begonnen",
+  "not_leader": "Du bist nicht der Spielleiter, sondern {{leader}}",
+
+  "check_textChannel": "Dieser Kanal ist kein Textkanal",
+  "check_game": "Es läuft gerade kein Spiel in diesem Kanal"
+}

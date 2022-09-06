@@ -1,4 +1,6 @@
 {
   "e_already_clicked": "Du hast bereits auf einen Knopf gedrückt.",
-  "explanation": "Drücke den Knopf, den die Meisten drücken."
+  "explanation": "Drücke innerhalb der nächsten 10s den Knopf, den die Meisten drücken.",
+  "choice": "Deine Wahl: {{choice}}",
+  "results": "Ergebnisse"
 }

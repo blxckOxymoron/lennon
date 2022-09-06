@@ -6,6 +6,6 @@ const base = new MessageEmbed().setColor("RED").setAuthor({
   iconURL: twemojiUrl("💥"),
 });
 
-export const ErrorEmbed = (content: string) => {
+export const ErrorEmbed = (content: string = "") => {
   return new MessageEmbed(base).setDescription(content);
 };

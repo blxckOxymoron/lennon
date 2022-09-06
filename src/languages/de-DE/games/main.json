@@ -1,5 +1,9 @@
 {
-  "player_join": "{{player}} ist beigetreten.",
-  "player_leave": "{{player}} hat das Spiel verlassen.",
-  "start": "Das Spiel ist gestartet."
+  "player_join": ":arrow_right: {{player}} ist beigetreten.",
+  "player_leave": ":arrow_left: {{player}} hat das Spiel verlassen.",
+  "start": "Das Spiel startet.",
+  "end": "Das Spiel ist zu ende.",
+  "welcome": ":video_game: Willkommen bei {{game}}!",
+  "create_success": "Spiel erfolfgreich erstellt.",
+  "start_success": "Spiel erfolgreich gestartet."
 }

@@ -8,9 +8,6 @@ export namespace ThemedEmbeds {
   export const Constants = ConstantEmbeds;
 }
 
-export type ImplementedLocales = "de" | "en";
-export type LocalizationMap = { [key in ImplementedLocales]: string | null };
-
 export const ephemeralEmbed = (embed: MessageEmbed): InteractionReplyOptions => {
   return {
     embeds: [embed],

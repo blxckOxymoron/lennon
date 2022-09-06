@@ -1,6 +1,6 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions } from "@sapphire/framework";
-import { AutocompleteInteraction, CommandInteraction } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import { invitePermissions } from "../../lib";
 import { nameAndVal } from "../../uitl/discord/interactions";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
@@ -15,7 +15,6 @@ import tutorials from "../../uitl/tutorials";
 })
 export class TutorialCommand extends Command {
   commandNames = tutorials.map(t => t.name);
-  commandNamesAllResponse = this.commandNames.map(nameAndVal);
 
   public override async chatInputRun(interaction: CommandInteraction) {
     const command = interaction.options.getString("command")?.trim();
@@ -55,26 +54,19 @@ export class TutorialCommand extends Command {
     }
   }
 
-  public override async autocompleteRun(interaction: AutocompleteInteraction) {
-    const command = interaction.options.getString("command");
-    if (!command) return interaction.respond(this.commandNamesAllResponse);
-
-    const filtered = this.commandNames.filter(c => c.startsWith(command));
-    if (filtered.length > 0) return interaction.respond(filtered.map(nameAndVal));
-    else return interaction.respond(this.commandNamesAllResponse);
-  }
-
   public override registerApplicationCommands(registry: Command.Registry) {
-    registry.registerChatInputCommand(builder =>
-      builder
-        .setName(this.name)
-        .setDescription(this.description)
-        .addStringOption(opt =>
-          opt
-            .setName("command")
-            .setDescription("The command you want to learn about.")
-            .setAutocomplete(true)
-        )
+    registry.registerChatInputCommand(
+      builder =>
+        builder
+          .setName(this.name)
+          .setDescription(this.description)
+          .addStringOption(opt =>
+            opt
+              .setName("command")
+              .setDescription("The command you want to learn about.")
+              .setChoices(...this.commandNames.map(nameAndVal))
+          )
+      // { behaviorWhenNotIdentical: RegisterBehavior.Overwrite }
     );
   }
 }

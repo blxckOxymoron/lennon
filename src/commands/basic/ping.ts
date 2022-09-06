@@ -12,7 +12,7 @@ import { CommandInteraction } from "discord.js";
     // behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
   },
 })
-export class MoleculeCommand extends Command {
+export class PingCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
     interaction.reply({
       content: `Pong :ping_pong:! (${interaction.client.ws.ping}ms)`,

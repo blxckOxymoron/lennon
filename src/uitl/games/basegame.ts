@@ -1,14 +1,15 @@
 import { Awaitable } from "discord.js";
-import { GameState, ErrorOrMessage, MoveError } from "./index";
+import { GamePhase, ErrorOrMessage, MoveError } from "./index";
 
 // game should be independent from platform
 
 export abstract class Game<PlayerData, State, MoveData, Player = string> {
   public abstract data: State;
+  public abstract name: string;
 
   public playerdata: Record<string, PlayerData> = {} as any; //? why do i need "as any" here?
-  public state = GameState.Waiting;
-  public timestamps: Record<GameState, number> = {
+  public phase = GamePhase.Waiting;
+  public timestamps: Record<GamePhase, number> = {
     waiting: Date.now(),
     running: 0,
     ended: 0,
@@ -31,7 +32,7 @@ export abstract class Game<PlayerData, State, MoveData, Player = string> {
   }
 
   public get canPlayersJoin(): boolean {
-    return this.state === GameState.Waiting;
+    return this.phase === GamePhase.Waiting;
   }
 
   public async getDataFor(player: Player): Promise<PlayerData | ErrorOrMessage> {
@@ -47,20 +48,26 @@ export abstract class Game<PlayerData, State, MoveData, Player = string> {
     this.upNowIndex %= this.playerIds.length;
   }
 
-  public async start(): Promise<void> {
-    this.state = GameState.Running;
+  public async start() {
+    if (this.phase !== GamePhase.Waiting) return;
+    this.phase = GamePhase.Running;
     this.timestamps.running = Date.now();
   }
 
-  public async end(): Promise<void> {
-    this.state = GameState.Ended;
+  public async end() {
+    if (this.phase !== GamePhase.Running) return;
+    this.phase = GamePhase.Ended;
     this.timestamps.ended = Date.now();
   }
 
   public async makeMove(player: Player, move: MoveData): Promise<ErrorOrMessage | void> {
-    if (this.state !== GameState.Running) return { error: MoveError.GameNotRunning };
+    if (this.phase !== GamePhase.Running) return { error: MoveError.GameNotRunning };
 
-    if (this.playerInTurnId !== this.getIdFor(player)) return { error: MoveError.InvalidPlayer };
+    const id = await this.getIdFor(player);
+
+    if (!this.playerIds.includes(id)) return { error: MoveError.NotInGame };
+
+    if (this.playerInTurnId !== id) return { error: MoveError.InvalidPlayer };
 
     return this.handleMove(player, move);
   }

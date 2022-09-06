@@ -14,7 +14,7 @@ import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
     // behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
   },
 })
-export class MoleculeCommand extends Command {
+export class TimerCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
     const name = interaction.options.getString("name");
     const amount = interaction.options.getString("amount");
