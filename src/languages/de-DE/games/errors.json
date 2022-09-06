@@ -1,0 +1,7 @@
+{
+  "invalid_move": "Ungültiger Zug",
+  "invalid_player": "Es ist nicht dein Zug",
+  "game_not_running": "Das Spiel läuft gerade nicht",
+  "not_in_game": "Du spielst gerade nicht mit",
+  "custom": "Ein Fehler ist aufgetreten"
+}

@@ -1,19 +1,26 @@
-import { Snowflake } from "discord.js";
+import { ClickGame } from "./click";
 
-enum GameState {
-  Waiting,
-  InProgress,
-  Ended,
+export enum GameState {
+  Waiting = "waiting",
+  Running = "running",
+  Ended = "ended",
 }
 
-export abstract class Game<P, T> {
-  public abstract data: T;
-  public playerdata: Record<Snowflake, P> = {};
-  public state = GameState.Waiting;
-
-  public getPlayers(): Snowflake[] {
-    return Object.keys(this.playerdata);
-  }
-
-  abstract getInitialPlayerData(player: Snowflake): P;
+//TODO change this to interface and properties to classes
+export enum MoveError {
+  InvalidMove = "games/errors:invalid_move",
+  InvalidPlayer = "games/errors:invalid_player",
+  GameNotRunning = "games/errors:game_not_running",
+  NotInGame = "games/errors:not_in_game",
+  Custom = "games/errors:custom",
 }
+
+export type ErrorOrMessage = { error: MoveError } | { error: MoveError.Custom; messageKey: string };
+
+export * from "./basegame";
+export * from "./discordgame";
+
+const games = {
+  ClickGame,
+};
+

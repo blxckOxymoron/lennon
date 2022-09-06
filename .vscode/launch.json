@@ -6,12 +6,13 @@
   "configurations": [
     {
       "name": "Launch Program",
-      "program": "${workspaceFolder}/dist/main.js",
+      "program": "${workspaceFolder}/src/main.ts",
       "request": "launch",
       "skipFiles": ["<node_internals>/**"],
       "runtimeArgs": ["--experimental-specifier-resolution=node"],
       "type": "node",
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js", "!**/node_modules/**"]
     }
   ]
 }

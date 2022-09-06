@@ -23,15 +23,15 @@ export class TutorialCommand extends Command {
       // Overview of all tutorials
       return interaction.reply(
         ephemeralEmbed(
-          ThemedEmbeds.Primary("Tutorials:")
-            .addFields(
-              this.commandNames.map(name => ({ name, value: `/tutorial ${name}`, inline: true }))
-            )
-            .addField(
-              "Links",
-              "[Github](https://github.com/blxckOxymoron/lennon) | " +
-                `[Invite](${this.container.client.generateInvite(invitePermissions)})`
-            )
+          ThemedEmbeds.Primary("Tutorials:").addFields(
+            ...this.commandNames.map(name => ({ name, value: `/tutorial ${name}`, inline: true })),
+            {
+              name: "Links",
+              value:
+                "[Github](https://github.com/blxckOxymoron/lennon) | " +
+                `[Invite](${this.container.client.generateInvite(invitePermissions)})`,
+            }
+          )
         )
       );
     } else {

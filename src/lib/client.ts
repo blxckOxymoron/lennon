@@ -2,6 +2,7 @@ import { LogLevel, SapphireClient, Logger } from "@sapphire/framework";
 import { Intents, InviteGenerationOptions, Permissions } from "discord.js";
 import { Config } from "./config";
 import chalk from "chalk";
+import { InternationalizationContext } from "@sapphire/plugin-i18next";
 
 export class Lennon extends SapphireClient {
   public constructor() {
@@ -16,6 +17,14 @@ export class Lennon extends SapphireClient {
       loadDefaultErrorListeners: true,
       logger: {
         instance: new ColorLogger(LogLevel.Info),
+      },
+      i18n: {
+        fetchLanguage: async (context: InternationalizationContext) => {
+          if (!context.guild) return "de-DE";
+
+          //TODO get language from db
+          return "de-DE";
+        },
       },
     });
   }
