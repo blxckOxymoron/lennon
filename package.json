@@ -10,7 +10,7 @@
     "stats": "cloc src"
   },
   "dependencies": {
-    "@prisma/client": "^3.15.2",
+    "@prisma/client": "^4.3.1",
     "@sapphire/decorators": "^4.3.4",
     "@sapphire/discord.js-utilities": "^4.11.1",
     "@sapphire/framework": "3.0.0-next.b7485a2.0",
@@ -23,6 +23,7 @@
     "discord.js": "^13.10.3",
     "dotenv": "^16.0.1",
     "openchemlib": "^7.4.3",
+    "prisma": "^4.3.1",
     "sharp": "^0.30.6",
     "twemoji": "^14.0.2"
   },

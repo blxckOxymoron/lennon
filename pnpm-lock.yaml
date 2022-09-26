@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@prisma/client': ^3.15.2
+  '@prisma/client': ^4.3.1
   '@sapphire/decorators': ^4.3.4
   '@sapphire/discord.js-utilities': ^4.11.1
   '@sapphire/framework': 3.0.0-next.b7485a2.0
@@ -16,12 +16,13 @@ specifiers:
   discord.js: ^13.10.3
   dotenv: ^16.0.1
   openchemlib: ^7.4.3
+  prisma: ^4.3.1
   sharp: ^0.30.6
   twemoji: ^14.0.2
   typescript: ^4.7.2
 
 dependencies:
-  '@prisma/client': 3.15.2
+  '@prisma/client': 4.3.1_prisma@4.3.1
   '@sapphire/decorators': 4.3.4
   '@sapphire/discord.js-utilities': 4.11.1
   '@sapphire/framework': 3.0.0-next.b7485a2.0
@@ -34,6 +35,7 @@ dependencies:
   discord.js: 13.10.3
   dotenv: 16.0.1
   openchemlib: 7.4.3
+  prisma: 4.3.1
   sharp: 0.30.6
   twemoji: 14.0.2
 
@@ -74,9 +76,9 @@ packages:
     deprecated: no longer supported
     dev: false
 
-  /@prisma/client/3.15.2:
-    resolution: {integrity: sha512-ErqtwhX12ubPhU4d++30uFY/rPcyvjk+mdifaZO5SeM21zS3t4jQrscy8+6IyB0GIYshl5ldTq6JSBo1d63i8w==}
-    engines: {node: '>=12.6'}
+  /@prisma/client/4.3.1_prisma@4.3.1:
+    resolution: {integrity: sha512-FA0/d1VMJNWqzU7WVWTNWJ+lGOLR9JUBnF73GdIPAEVo/6dWk4gHx0EmgeU+SMv4MZoxgOeTBJF2azhg7x0hMw==}
+    engines: {node: '>=14.17'}
     requiresBuild: true
     peerDependencies:
       prisma: '*'
@@ -84,11 +86,17 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e
+      '@prisma/engines-version': 4.3.0-32.c875e43600dfe042452e0b868f7a48b817b9640b
+      prisma: 4.3.1
     dev: false
 
-  /@prisma/engines-version/3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e:
-    resolution: {integrity: sha512-e3k2Vd606efd1ZYy2NQKkT4C/pn31nehyLhVug6To/q8JT8FpiMrDy7zmm3KLF0L98NOQQcutaVtAPhzKhzn9w==}
+  /@prisma/engines-version/4.3.0-32.c875e43600dfe042452e0b868f7a48b817b9640b:
+    resolution: {integrity: sha512-8yWpXkQRmiSfsi2Wb/ZS5D3RFbeu/btL9Pm/gdF4phB0Lo5KGsDFMxFMgaD64mwED2nHc8ZaEJg/+4Jymb9Znw==}
+    dev: false
+
+  /@prisma/engines/4.3.1:
+    resolution: {integrity: sha512-4JF/uMaEDAPdcdZNOrnzE3BvrbGpjgV0FcPT3EVoi6I86fWkloqqxBt+KcK/+fIRR0Pxj66uGR9wVH8U1Y13JA==}
+    requiresBuild: true
     dev: false
 
   /@sapphire/async-queue/1.5.0:
@@ -724,6 +732,15 @@ packages:
       simple-get: 4.0.1
       tar-fs: 2.1.1
       tunnel-agent: 0.6.0
+    dev: false
+
+  /prisma/4.3.1:
+    resolution: {integrity: sha512-90xo06wtqil76Xsi3mNpc4Js3SdDRR5g4qb9h+4VWY4Y8iImJY6xc3PX+C9xxTSt1lr0Q89A0MLkJjd8ax6KiQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@prisma/engines': 4.3.1
     dev: false
 
   /process-nextick-args/2.0.1:
