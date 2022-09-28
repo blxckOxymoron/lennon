@@ -1,0 +1,51 @@
+
+name: Build and Deploy Lennon
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3  
+      - uses: actions/setup-node@v3
+        with: 
+          node-version: 18
+          cache: "pnpm"
+      - run: "pnpm install"
+      - run: "pnpm run build"
+      - name: "delete files irrelevant for build"
+        run: "rm -r .* && rm -r src"
+      - name: "upload built files"
+        uses: actions/upload-artifact@v3
+        with:
+          name: lennon
+          path: "."
+  
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "get artifact download url"
+        id: fetchurl
+        run: |
+          download_url=$(curl \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ github.token }}" \
+            ${{ github.api_url }}/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts | 
+          jq --raw-output '.artifacts[0].archive_download_url')
+          echo "::set-output name=url::$download_url"
+      - name: "start deploy.sh on vps"
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: lennon/scripts/deploy.sh ${{ github.token }} ${{ steps.fetchurl.outputs.url }}
+          host: ${{ secrets.HOST }}
+          username: github
+          passphrase: ${{ secrets.PASSPHRASE }}
+          privateKey: ${{ secrets.PRIVATE_KEY}}
+              
