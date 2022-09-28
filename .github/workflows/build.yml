@@ -26,7 +26,7 @@ jobs:
       - run: "pnpm install"
       - run: "pnpm run build"
       - name: "select files for artifact"
-        run: "mkdir artifact && mv dist prisma scripts package.json pnpm-lock.yaml artifact/"
+        run: "mkdir artifact && mv dist prisma package.json pnpm-lock.yaml artifact/"
       - name: "upload built files"
         uses: actions/upload-artifact@v3
         with:
@@ -38,24 +38,16 @@ jobs:
     needs: build
 
     steps:
-      - name: "get artifact download url"
-        id: fetchurl
-        run: |
-          artifacts=$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts);
-          download_url=$(echo $artifacts | jq --raw-output '.artifacts[0].archive_download_url');
-          echo "\n\n";
-          echo "$artifacts";
-          echo "$download_url";
-          echo "::set-output name=url::$download_url";
-        env:
-          GH_TOKEN: ${{ github.token }}
       - name: "start deploy.sh on vps"
-        uses: garygrossgarten/github-action-ssh@release
+        uses: appleboy/ssh-action@master
         with:
-          command: sh lennon/scripts/deploy.sh ${{ github.token }} ${{ steps.fetchurl.outputs.url }}
           host: ${{ secrets.HOST }}
           username: github
-          privateKey: ${{ secrets.PRIVATE_KEY }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: | 
+            screen -XS lennon quit || true;
+            rm -r [!._]*;
+            gh run download -R ${{ github.repository }} ${{ github.run_id }} -n lennon;
+            screen -dmS lennon pnpm run deploy;
+
               
