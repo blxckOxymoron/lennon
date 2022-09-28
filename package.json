@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "main": "dist/main.js",
   "scripts": {
+    "install": "pnpm exec prisma generate",
     "build": "pnpm exec tsc",
     "start": "node --experimental-specifier-resolution=node .",
     "deploy": "NODE_ENV=\"production\" && pnpm install -P && pnpm run prisma:deploy && pnpm run start",
