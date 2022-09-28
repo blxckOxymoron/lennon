@@ -26,7 +26,7 @@ jobs:
       - run: "pnpm install"
       - run: "pnpm run build"
       - name: "delete files irrelevant for build"
-        run: "rm -r .* && rm -r src"
+        run: "rm -r .* || rm -r src"
       - name: "upload built files"
         uses: actions/upload-artifact@v3
         with:
