@@ -17,6 +17,12 @@ jobs:
         with: 
           node-version: 18
           cache: "pnpm"
+      - uses: pnpm/action-setup@v2.0.1
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
       - run: "pnpm install"
       - run: "pnpm run build"
       - name: "delete files irrelevant for build"
@@ -29,6 +35,7 @@ jobs:
   
   deploy:
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
       - name: "get artifact download url"
@@ -47,5 +54,5 @@ jobs:
           host: ${{ secrets.HOST }}
           username: github
           passphrase: ${{ secrets.PASSPHRASE }}
-          privateKey: ${{ secrets.PRIVATE_KEY}}
+          privateKey: ${{ secrets.PRIVATE_KEY }}
               
