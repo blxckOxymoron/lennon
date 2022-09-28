@@ -41,18 +41,19 @@ jobs:
       - name: "get artifact download url"
         id: fetchurl
         run: |
-          download_url=$(curl \
+          artifacts=$(gh api \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ github.token }}" \
-            ${{ github.api_url }}/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts | 
-          jq --raw-output '.artifacts[0].archive_download_url')
-          echo "::set-output name=url::$download_url"
+            /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts);
+          download_url=$(echo $artifacts | jq --raw-output '.artifacts[0].archive_download_url');
+          echo "\n\n";
+          echo "$artifacts";
+          echo "$download_url";
+          echo "::set-output name=url::$download_url";
       - name: "start deploy.sh on vps"
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: lennon/scripts/deploy.sh ${{ github.token }} ${{ steps.fetchurl.outputs.url }}
+          command: sh lennon/scripts/deploy.sh ${{ github.token }} ${{ steps.fetchurl.outputs.url }}
           host: ${{ secrets.HOST }}
           username: github
-          passphrase: ${{ secrets.PASSPHRASE }}
           privateKey: ${{ secrets.PRIVATE_KEY }}
               

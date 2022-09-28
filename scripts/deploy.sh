@@ -1,8 +1,10 @@
 # deploy.sh <bearer> <artifacturl>
 
+cd ..;
+
 screen -XS lennon quit;
 
-rmdir dist;
+rm -r dist;
 
 curl \
   -o artifact.zip \
