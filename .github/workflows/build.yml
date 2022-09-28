@@ -49,6 +49,8 @@ jobs:
           echo "$artifacts";
           echo "$download_url";
           echo "::set-output name=url::$download_url";
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: "start deploy.sh on vps"
         uses: garygrossgarten/github-action-ssh@release
         with:
