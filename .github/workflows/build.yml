@@ -25,13 +25,13 @@ jobs:
           cache: "pnpm"
       - run: "pnpm install"
       - run: "pnpm run build"
-      - name: "delete files irrelevant for build"
-        run: "rm -r .* || rm -r src"
+      - name: "select files for artifact"
+        run: "mkdir artifact && mv dist prisma scripts package.json pnpm-lock.yaml artifact/"
       - name: "upload built files"
         uses: actions/upload-artifact@v3
         with:
           name: lennon
-          path: "."
+          path: "artifact"
   
   deploy:
     runs-on: ubuntu-latest
