@@ -38,16 +38,23 @@ jobs:
     needs: build
 
     steps:
+      - name: "print gh command and sleep 10 seconds"
+        run: echo 'gh run download -R ${{ github.repository }} ${{ github.run_id }} -n lennon' && sleep 10
+
       - name: "start deploy.sh on vps"
         uses: appleboy/ssh-action@master
+        env: 
+          GH_TOKEN: ${{ github.token }}
         with:
           host: ${{ secrets.HOST }}
           username: github
           key: ${{ secrets.PRIVATE_KEY }}
+          envs: GH_TOKEN
           script: | 
+            cd /home/github/lennon;
             screen -XS lennon quit || true;
             rm -r [!._]*;
-            gh run download -R ${{ github.repository }} ${{ github.run_id }} -n lennon;
+            gh run download -R ${{ github.repository }} ${{ github.run_id }} -n lennon && 
             screen -dmS lennon pnpm run deploy;
 
               
