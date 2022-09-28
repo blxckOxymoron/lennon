@@ -36,10 +36,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    
 
     steps:
       - name: "print gh command and sleep 10 seconds"
-        run: echo 'gh run download -R ${{ github.repository }} ${{ github.run_id }} -n lennon' && sleep 10
+        run: echo 'gh run download -R ${{ github.repository }} ${{ github.run_id }} -n lennon' && sleep 60
 
       - name: "start deploy.sh on vps"
         uses: appleboy/ssh-action@master
