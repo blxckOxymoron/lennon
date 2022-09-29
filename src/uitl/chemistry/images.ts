@@ -35,6 +35,5 @@ export const generateImage: MoleculeRenderer = async mol => {
     autoCrop: true,
   });
   svg = recolorSVG(svg);
-  writeFile(`P:/TypeScript/lennon/tmp/${Date.now()}.svg`, svg);
   return sharp(Buffer.from(svg)).png().toBuffer();
 };
