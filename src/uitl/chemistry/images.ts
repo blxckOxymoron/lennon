@@ -1,6 +1,5 @@
 import { Molecule } from "openchemlib";
 import sharp from "sharp";
-import { writeFile } from "node:fs/promises";
 import { prisma } from "../../lib";
 import { moleculeHash } from "./molecule";
 import { CachedImage, recolorSVG } from "../image";
