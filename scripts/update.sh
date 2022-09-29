@@ -30,7 +30,7 @@ if [ "$current" != "$latest" ]; then
     echo "New build detected, updating...";
     find . -maxdepth 1 ! -name "_*" ! -name ".*" ! -name "node_modules" -exec rm -r {} +
     gh run download $id -R $repo -n lennon
-    pnpm install -P
+    pnpm run deploy
     echo "Updated!"
     echo $latest > sha.txt
 else

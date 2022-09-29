@@ -6,8 +6,7 @@
     "install": "pnpm exec prisma generate",
     "build": "pnpm exec tsc",
     "start": "node --experimental-specifier-resolution=node .",
-    "deploy": "NODE_ENV=\"production\" && pnpm install -P && pnpm run prisma:deploy && pnpm run start",
-    "prisma:deploy": "pnpm exec prisma migrate deploy",
+    "deploy": "pnpm install -P && pnpm exec prisma migrate deploy",
     "prisma:studio": "pnpx prisma studio",
     "stats": "cloc src"
   },
