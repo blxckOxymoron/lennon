@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions } from "@sapphire/framework";
+import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import {
   AutocompleteInteraction,
   Collection,
@@ -91,8 +91,11 @@ export class MoleculeCommand extends Command {
               .setDescription("The name of the molecule.")
               .setRequired(true)
               .setAutocomplete(true)
-          )
-      // { behaviorWhenNotIdentical: RegisterBehavior.Overwrite }
+          ),
+      {
+        idHints: ["982305197558730773"],
+        behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+      }
     );
   }
 }

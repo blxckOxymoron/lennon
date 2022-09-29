@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions } from "@sapphire/framework";
+import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import { resolveKey } from "@sapphire/plugin-i18next";
 import { CommandInteraction } from "discord.js";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
@@ -111,8 +111,11 @@ export class GameCommand extends Command {
           )
           .addSubcommand(sub =>
             sub.setName("start").setDescription("Start the game in the channel.")
-          )
-      // { behaviorWhenNotIdentical: RegisterBehavior.Overwrite }
+          ),
+      {
+        idHints: ["1016735654014623846"],
+        behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+      }
     );
   }
 }
