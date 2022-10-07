@@ -9,7 +9,7 @@ import { CommandInteraction } from "discord.js";
   enabled: true,
   chatInputCommand: {
     register: true,
-    idHints: ["982305196648566784"],
+    idHints: ["982305196648566784", "925486066234982412"],
     behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
   },
 })

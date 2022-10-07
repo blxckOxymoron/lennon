@@ -7,6 +7,7 @@
     "build": "pnpm exec tsc",
     "start": "node --experimental-specifier-resolution=node .",
     "deploy": "pnpm install -P && pnpm exec prisma migrate deploy",
+    "dev": "pnpm exec prisma db push && pnpm exec tsc --watch",
     "prisma:studio": "pnpx prisma studio",
     "stats": "cloc src"
   },

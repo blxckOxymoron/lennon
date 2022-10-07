@@ -93,7 +93,7 @@ export class MoleculeCommand extends Command {
               .setAutocomplete(true)
           ),
       {
-        idHints: ["982305197558730773"],
+        idHints: ["982305197558730773", "1027968331594088468"],
         behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
       }
     );

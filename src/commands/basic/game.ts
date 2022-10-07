@@ -128,7 +128,7 @@ export class GameCommand extends Command {
         )
     ),
       {
-        idHints: ["1016735654014623846"],
+        idHints: ["1016735654014623846", "1027968326862897202"],
         behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
       };
   }

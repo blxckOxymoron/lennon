@@ -145,7 +145,7 @@ export class EquationCommand extends Command {
             opt.setName("title").setDescription("A title to be displayed above the equation.")
           ),
       {
-        idHints: ["988031443290714142"],
+        idHints: ["988031443290714142", "1027968333133402164"],
         behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
       }
     );

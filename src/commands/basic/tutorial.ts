@@ -67,7 +67,7 @@ export class TutorialCommand extends Command {
               .setChoices(...this.commandNames.map(nameAndVal))
           ),
       {
-        idHints: ["988052447765336074"],
+        idHints: ["988052447765336074", "925486066234982413"],
         behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
       }
     );

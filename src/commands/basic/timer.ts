@@ -101,7 +101,7 @@ export class TimerCommand extends Command {
               .setAutocomplete(true)
           ),
       {
-        idHints: ["988133449464414240"],
+        idHints: ["988133449464414240", "1027968329270439946"],
         behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
       }
     );
