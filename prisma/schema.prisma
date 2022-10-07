@@ -19,3 +19,10 @@ model Image {
   data      String   @default("{}")
   createdAt DateTime @default(now())
 }
+
+model Guild {
+  id            String  @id @default(cuid())
+  guildId       String  @unique
+  language      String  @default("en-US")
+  gameChannelId String?
+}

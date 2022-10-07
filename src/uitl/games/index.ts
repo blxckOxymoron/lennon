@@ -23,7 +23,11 @@ export * from "./basegame";
 export * from "./discordgame";
 export { default as GameManager } from "./manager";
 
-type DiscordGameImpl = new (channel: TextChannel, creator: User) => DiscordGame<any, any, any>;
+export type DiscordGameImpl = new (channel: TextChannel, creator: User) => DiscordGame<
+  any,
+  any,
+  any
+>;
 
 export const discordGames: Record<string, DiscordGameImpl> = {
   ClickGame,

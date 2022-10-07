@@ -1,17 +1,18 @@
 import { resolveKey } from "@sapphire/plugin-i18next";
-import { TextChannel } from "discord.js";
+import { Interaction, TextChannel } from "discord.js";
 import { DiscordGame } from "./discordgame";
 import { ThemedEmbeds } from "../embeds";
+import { DiscordGameImpl } from ".";
 
 class GameManager {
   games: DiscordGame<any, any, any>[] = [];
 
-  async addGame(game: DiscordGame<any, any, any>) {
-    await game.channel.send({
+  async newGame(interaction: Interaction, gameImpl: DiscordGameImpl) {
+    const channel = interaction.channel as TextChannel; //TODO create thread
+    const game = new gameImpl(channel, interaction.user);
+    await channel.send({
       embeds: [
-        ThemedEmbeds.Primary(
-          await resolveKey(game.channel, "games/main:welcome", { game: game.name })
-        ),
+        ThemedEmbeds.Primary(await resolveKey(channel, "games/main:welcome", { game: game.name })),
       ],
     });
     this.games.push(game);

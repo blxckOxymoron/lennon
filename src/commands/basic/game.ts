@@ -40,7 +40,7 @@ export class GameCommand extends Command {
       )
     );
 
-    GameManager.addGame(new game(textChannel, interaction.user));
+    GameManager.newGame(interaction, game);
   }
 
   private async startGameRun(interaction: CommandInteraction) {
@@ -73,6 +73,9 @@ export class GameCommand extends Command {
     );
   }
 
+  // @ts-ignore
+  private async setChannelRun(interaction: CommandInteraction) {}
+
   public override async chatInputRun(interaction: CommandInteraction) {
     switch (interaction.options.getSubcommand()) {
       case "create":
@@ -80,6 +83,9 @@ export class GameCommand extends Command {
         break;
       case "start":
         await this.startGameRun(interaction);
+        break;
+      case "set-channel":
+        await this.setChannelRun(interaction);
         break;
       default:
         this.container.logger.error("Unknown subcommand.");
@@ -111,6 +117,17 @@ export class GameCommand extends Command {
           )
           .addSubcommand(sub =>
             sub.setName("start").setDescription("Start the game in the channel.")
+          )
+          .addSubcommand(sub =>
+            sub
+              .setName("set-channel")
+              .setDescription("Set the channel for games.")
+              .addChannelOption(opt =>
+                opt
+                  .setName("channel")
+                  .setDescription("The channel to play games in.")
+                  .setRequired(true)
+              )
           )
       // { behaviorWhenNotIdentical: RegisterBehavior.Overwrite }
     );
