@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions } from "@sapphire/framework";
+import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import {
   ApplicationCommandOptionChoiceData,
   AutocompleteInteraction,
@@ -129,20 +129,25 @@ export class EquationCommand extends Command {
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
-    registry.registerChatInputCommand(bld =>
-      bld
-        .setName(this.name)
-        .setDescription(this.description)
-        .addStringOption(opt =>
-          opt
-            .setName("text")
-            .setDescription("The math equaltion to be displayed.")
-            .setAutocomplete(true)
-            .setRequired(true)
-        )
-        .addStringOption(opt =>
-          opt.setName("title").setDescription("A title to be displayed above the equation.")
-        )
+    registry.registerChatInputCommand(
+      bld =>
+        bld
+          .setName(this.name)
+          .setDescription(this.description)
+          .addStringOption(opt =>
+            opt
+              .setName("text")
+              .setDescription("The math equaltion to be displayed.")
+              .setAutocomplete(true)
+              .setRequired(true)
+          )
+          .addStringOption(opt =>
+            opt.setName("title").setDescription("A title to be displayed above the equation.")
+          ),
+      {
+        idHints: ["988031443290714142"],
+        behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+      }
     );
   }
 }

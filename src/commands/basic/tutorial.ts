@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions } from "@sapphire/framework";
+import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import { CommandInteraction } from "discord.js";
 import { invitePermissions } from "../../lib";
 import { nameAndVal } from "../../uitl/discord/interactions";
@@ -65,8 +65,11 @@ export class TutorialCommand extends Command {
               .setName("command")
               .setDescription("The command you want to learn about.")
               .setChoices(...this.commandNames.map(nameAndVal))
-          )
-      // { behaviorWhenNotIdentical: RegisterBehavior.Overwrite }
+          ),
+      {
+        idHints: ["988052447765336074"],
+        behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+      }
     );
   }
 }

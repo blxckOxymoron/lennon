@@ -1,6 +1,5 @@
 import { Molecule } from "openchemlib";
 import sharp from "sharp";
-import { writeFile } from "node:fs/promises";
 import { prisma } from "../../lib";
 import { moleculeHash } from "./molecule";
 import { CachedImage, recolorSVG } from "../image";
@@ -35,6 +34,5 @@ export const generateImage: MoleculeRenderer = async mol => {
     autoCrop: true,
   });
   svg = recolorSVG(svg);
-  writeFile(`P:/TypeScript/lennon/tmp/${Date.now()}.svg`, svg);
   return sharp(Buffer.from(svg)).png().toBuffer();
 };

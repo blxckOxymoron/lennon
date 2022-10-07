@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions } from "@sapphire/framework";
+import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import { AutocompleteInteraction, CommandInteraction } from "discord.js";
 import { nameAndVal } from "../../uitl/discord/interactions";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
@@ -9,10 +9,7 @@ import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
   description: "Set a timer",
   fullCategory: ["Basic"],
   enabled: true,
-  chatInputCommand: {
-    register: true,
-    // behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
-  },
+  chatInputCommand: { register: true },
 })
 export class TimerCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
@@ -88,20 +85,25 @@ export class TimerCommand extends Command {
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
-    registry.registerChatInputCommand(bld =>
-      bld
-        .setName(this.name)
-        .setDescription(this.description)
-        .addStringOption(opt =>
-          opt.setName("name").setDescription("The name of the timer").setRequired(true)
-        )
-        .addStringOption(opt =>
-          opt
-            .setName("amount")
-            .setDescription("Timer duration (1m | 30s | 2h 30m)")
-            .setRequired(true)
-            .setAutocomplete(true)
-        )
+    registry.registerChatInputCommand(
+      bld =>
+        bld
+          .setName(this.name)
+          .setDescription(this.description)
+          .addStringOption(opt =>
+            opt.setName("name").setDescription("The name of the timer").setRequired(true)
+          )
+          .addStringOption(opt =>
+            opt
+              .setName("amount")
+              .setDescription("Timer duration (1m | 30s | 2h 30m)")
+              .setRequired(true)
+              .setAutocomplete(true)
+          ),
+      {
+        idHints: ["988133449464414240"],
+        behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+      }
     );
   }
 }

@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions } from "@sapphire/framework";
+import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import { CommandInteraction } from "discord.js";
 
 @ApplyOptions<CommandOptions>({
@@ -9,7 +9,8 @@ import { CommandInteraction } from "discord.js";
   enabled: true,
   chatInputCommand: {
     register: true,
-    // behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+    idHints: ["982305196648566784"],
+    behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
   },
 })
 export class PingCommand extends Command {

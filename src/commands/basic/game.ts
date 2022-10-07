@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Command, CommandOptions } from "@sapphire/framework";
+import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import { resolveKey } from "@sapphire/plugin-i18next";
 import { CommandInteraction } from "discord.js";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
@@ -93,43 +93,43 @@ export class GameCommand extends Command {
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
-    registry.registerChatInputCommand(
-      builder =>
-        builder
-          .setName(this.name)
-          .setDescription(this.description)
-          .addSubcommand(sub =>
-            sub
-              .setName("create")
-              .setDescription("Create a game.")
-              .addStringOption(opt =>
-                opt
-                  .setName("game")
-                  .setDescription("The game you want to play.")
-                  .setChoices(
-                    ...Object.entries(discordGames).map(([key, game]) => ({
-                      name: game.name,
-                      value: key,
-                    }))
-                  )
-                  .setRequired(true)
-              )
-          )
-          .addSubcommand(sub =>
-            sub.setName("start").setDescription("Start the game in the channel.")
-          )
-          .addSubcommand(sub =>
-            sub
-              .setName("set-channel")
-              .setDescription("Set the channel for games.")
-              .addChannelOption(opt =>
-                opt
-                  .setName("channel")
-                  .setDescription("The channel to play games in.")
-                  .setRequired(true)
-              )
-          )
-      // { behaviorWhenNotIdentical: RegisterBehavior.Overwrite }
-    );
+    registry.registerChatInputCommand(builder =>
+      builder
+        .setName(this.name)
+        .setDescription(this.description)
+        .addSubcommand(sub =>
+          sub
+            .setName("create")
+            .setDescription("Create a game.")
+            .addStringOption(opt =>
+              opt
+                .setName("game")
+                .setDescription("The game you want to play.")
+                .setChoices(
+                  ...Object.entries(discordGames).map(([key, game]) => ({
+                    name: game.name,
+                    value: key,
+                  }))
+                )
+                .setRequired(true)
+            )
+        )
+        .addSubcommand(sub => sub.setName("start").setDescription("Start the game in the channel."))
+        .addSubcommand(sub =>
+          sub
+            .setName("set-channel")
+            .setDescription("Set the channel for games.")
+            .addChannelOption(opt =>
+              opt
+                .setName("channel")
+                .setDescription("The channel to play games in.")
+                .setRequired(true)
+            )
+        )
+    ),
+      {
+        idHints: ["1016735654014623846"],
+        behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+      };
   }
 }
