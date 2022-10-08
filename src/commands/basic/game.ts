@@ -27,9 +27,7 @@ export class GameCommand extends Command {
     if (!game) {
       return await interaction.reply(
         ephemeralEmbed(
-          ThemedEmbeds.Error(
-            await resolveKey(interaction, "error:with_code", { code: "gameNotFound" })
-          )
+          ThemedEmbeds.Error(await resolveKey(interaction, "error:with_code", { code: "no_game" }))
         )
       );
     }

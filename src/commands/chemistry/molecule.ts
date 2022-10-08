@@ -1,11 +1,7 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
-import {
-  AutocompleteInteraction,
-  Collection,
-  CommandInteraction,
-  MessageAttachment,
-} from "discord.js";
+import { resolveKey } from "@sapphire/plugin-i18next";
+import { AutocompleteInteraction, Collection, CommandInteraction, FileOptions } from "discord.js";
 import { prisma } from "../../lib";
 import { autocomplete, findMolecule, generateImage, moleculeHash } from "../../uitl/chemistry";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
@@ -26,30 +22,40 @@ export class MoleculeCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
     const query = interaction.options.getString("query")?.trim();
 
-    if (!query) return interaction.reply(ephemeralEmbed(ThemedEmbeds.Error("No query provided.")));
+    if (!query)
+      return interaction.reply(
+        ephemeralEmbed(
+          ThemedEmbeds.Error(await resolveKey(interaction, "error:with_code", { code: "no_query" }))
+        )
+      );
 
     const result = await findMolecule(query);
     if (!result)
       return interaction.reply(
-        ephemeralEmbed(ThemedEmbeds.Error(`Molecule \`${query}\` not found.`))
+        ephemeralEmbed(
+          ThemedEmbeds.Error(
+            await resolveKey(interaction, "chemistry/molecule:not_found", { query })
+          )
+        )
       );
 
     await interaction.deferReply();
 
     const render = await generateImage(result.molecule);
 
-    if (render instanceof URL) {
-      interaction.followUp(render.href);
-    } else {
-      const attachment = new MessageAttachment(
-        render,
-        this.replaceSpecial(query) + ".png"
-      ).setDescription(`the molecule from the query: '${query}'`);
+    const attachment: FileOptions = {
+      name: this.replaceSpecial(query) + ".png",
+      description: `the molecule from the query: '${query}'`,
+      attachment: render instanceof URL ? render.href : render,
+    };
 
-      const imageMessage = await interaction.followUp({
-        files: [attachment],
-      });
+    await interaction.followUp({
+      content: `**${query}**`,
+      files: [attachment],
+    });
 
+    if (render instanceof Buffer) {
+      const imageMessage = await interaction.fetchReply();
       if (!(imageMessage.attachments instanceof Collection)) return;
 
       const url = imageMessage.attachments.first()?.proxyURL;
@@ -64,8 +70,6 @@ export class MoleculeCommand extends Command {
         },
       });
     }
-
-    await interaction.editReply(`**${query}**`); // edit it later to have bouth messages on the same 'stack'
   }
 
   public override async autocompleteRun(interaction: AutocompleteInteraction) {

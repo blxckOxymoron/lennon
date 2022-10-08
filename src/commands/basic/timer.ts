@@ -1,5 +1,6 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
+import { resolveKey } from "@sapphire/plugin-i18next";
 import { AutocompleteInteraction, CommandInteraction } from "discord.js";
 import { nameAndVal } from "../../uitl/discord/interactions";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
@@ -18,11 +19,10 @@ export class TimerCommand extends Command {
     if (amount === null || name === null) return;
 
     const duration = this.parseDurationMixed(amount);
+    const time = `<t:${Math.ceil(Date.now() / 1000) + duration}:R>`;
     await interaction.reply(
       ephemeralEmbed(
-        ThemedEmbeds.Primary(
-          `Timer for **${name}** set to <t:${Math.ceil(Date.now() / 1000) + duration}:R>`
-        )
+        ThemedEmbeds.Primary(await resolveKey(interaction, "basic/timer:created", { name, time }))
       )
     );
 

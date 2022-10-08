@@ -5,7 +5,7 @@ import {
   AutocompleteInteraction,
   Collection,
   CommandInteraction,
-  MessageAttachment,
+  FileOptions,
 } from "discord.js";
 import { prisma } from "../../lib";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
@@ -25,7 +25,7 @@ type AdditionalData = {
   chatInputCommand: { register: true },
 })
 export class EquationCommand extends Command {
-  private formatName(query: string): string {
+  private replaceSpecial(query: string): string {
     return query.replace(/ +/g, "-").slice(0, 32) || "equation";
   }
 
@@ -39,51 +39,43 @@ export class EquationCommand extends Command {
     const render = await generateImage(query).catch((e: Error) => e);
 
     if (render instanceof Error) {
-      await interaction.deleteReply();
-
       await interaction.followUp(
         ephemeralEmbed(ThemedEmbeds.Error("Invalid equation: " + render.message).setTitle(query))
       );
       return;
     }
 
-    const responseMethod = title ? "followUp" : "editReply";
+    const name = title || (await getTexName(query));
+    const attachment: FileOptions = {
+      name: this.replaceSpecial(query) + ".png",
+      description: name.slice(0, 64),
+      attachment: render instanceof URL ? render.href : render,
+    };
 
-    if (render instanceof URL) {
-      interaction[responseMethod](render.href);
-    } else {
-      const name = title || (await getTexName(query));
-
-      const attachment = new MessageAttachment(
-        render,
-        this.formatName(name) + ".png"
-      ).setDescription(name.slice(0, 64));
-
-      let imageMessage = await interaction[responseMethod]({
-        files: [attachment],
-      });
-
-      if (!(imageMessage.attachments instanceof Collection))
-        throw new TypeError("attachments different than expected");
+    if (render instanceof Buffer) {
+      const imageMessage = await interaction.fetchReply();
+      if (!(imageMessage.attachments instanceof Collection)) return;
 
       const url = imageMessage.attachments.first()?.proxyURL;
-      if (!url) this.container.logger.warn("No proxyURL found.");
-      else {
-        const creatorId = interaction.user.id;
-        const metadata: AdditionalData = { query, creatorId };
-        await prisma.image.create({
-          data: {
-            key: texHash(query),
-            name: title || query,
-            type: CachedImage.Equation,
-            data: JSON.stringify(metadata),
-            url,
-          },
-        });
-      }
+      if (!url) return this.container.logger.warn("No proxyURL found.");
+
+      const creatorId = interaction.user.id;
+      const metadata: AdditionalData = { query, creatorId };
+      await prisma.image.create({
+        data: {
+          key: texHash(query),
+          name: title || query,
+          type: CachedImage.Equation,
+          data: JSON.stringify(metadata),
+          url,
+        },
+      });
     }
 
-    if (title) await interaction.editReply(`**${title}**`);
+    await interaction.followUp({
+      content: title ? `**${title}**` : null,
+      files: [attachment],
+    });
   }
 
   examples: ApplicationCommandOptionChoiceData[] = [

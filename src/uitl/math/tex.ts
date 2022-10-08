@@ -20,10 +20,15 @@ export const generateImage: MathRenderer = async equation => {
     },
     select: {
       url: true,
+      id: true,
     },
   });
 
-  if (cached) return new URL(cached.url);
+  if (cached) {
+    const exists = await fetch(cached.url).then(res => res.ok);
+    if (exists) return new URL(cached.url);
+    else prisma.image.delete({ where: { id: cached.id } });
+  }
 
   const png = await fetch(mathoidBase + "png", {
     method: "POST",

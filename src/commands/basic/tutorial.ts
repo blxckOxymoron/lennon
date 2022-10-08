@@ -1,5 +1,6 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
+import { resolveKey } from "@sapphire/plugin-i18next";
 import { CommandInteraction } from "discord.js";
 import { invitePermissions } from "../../lib";
 import { nameAndVal } from "../../uitl/discord/interactions";
@@ -38,7 +39,11 @@ export class TutorialCommand extends Command {
       const tutorial = tutorials.find(t => t.name === command);
       if (!tutorial)
         return interaction.reply(
-          ephemeralEmbed(ThemedEmbeds.Error(`Tutorial \`${command}\` not found.`))
+          ephemeralEmbed(
+            ThemedEmbeds.Error(
+              await resolveKey(interaction, "basic/tutorial:not_found", { command })
+            )
+          )
         );
 
       return interaction.reply(

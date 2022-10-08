@@ -17,9 +17,15 @@ export const generateImage: MoleculeRenderer = async mol => {
     },
     select: {
       url: true,
+      id: true,
     },
   });
-  if (cached) return new URL(cached.url);
+
+  if (cached) {
+    const exists = await fetch(cached.url).then(res => res.ok);
+    if (exists) return new URL(cached.url);
+    else prisma.image.delete({ where: { id: cached.id } });
+  }
 
   let svg = mol.toSVG(500, 200, undefined, {
     strokeWidth: "2",
