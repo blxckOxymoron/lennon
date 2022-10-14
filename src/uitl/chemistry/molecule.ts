@@ -1,3 +1,4 @@
+import { container } from "@sapphire/framework";
 import { createHash } from "node:crypto";
 import ocl from "openchemlib";
 const { Molecule } = ocl;
@@ -27,7 +28,9 @@ type MoleculeResult = {
 const findMoleculePubchem = async (query: string): Promise<MoleculeResult | undefined> => {
   const compoundRes: ChemCompoundResponse | undefined = await fetch(
     `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${query}/property/CanonicalSMILES/JSON`
-  ).then(res => (res.ok ? res.json() : undefined));
+  )
+    .then(res => (res.ok ? res.json() : undefined))
+    .catch(() => container.logger.warn("Failed to fetch from PubChem."));
 
   if (!compoundRes || "Fault" in compoundRes) return;
 
@@ -43,9 +46,11 @@ const findMoleculePubchem = async (query: string): Promise<MoleculeResult | unde
 };
 
 const findMoleculeCactus = async (query: string): Promise<MoleculeResult | undefined> => {
-  const smiles = await fetch(`https://cactus.nci.nih.gov/chemical/structure/${query}/smiles`).then(
-    res => (res.ok ? res.text() : undefined)
-  );
+  const smiles = await fetch(
+    `https://cactus.nci.nih.gov/chemical/structure/${encodeURIComponent(query)}/smiles`
+  )
+    .then(res => (res.ok ? res.text() : undefined))
+    .catch(() => container.logger.warn("Failed to fetch from Cactus."));
   if (!smiles) return;
 
   const molecule = Molecule.fromSmiles(smiles);
