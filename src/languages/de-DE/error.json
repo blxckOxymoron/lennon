@@ -1,3 +1,5 @@
 {
-  "with_code": "Ein Fehler ist aufgetreten. ({{code}})"
+  "with_code": "Ein Fehler ist aufgetreten. ({{code}})",
+  "missing_permission": "Dir fehlen die Berechtigungen, um diese Aktion auszuführen.",
+  "only_in_guild": "Diese Aktion kann nur in einem Server ausgeführt werden."
 }

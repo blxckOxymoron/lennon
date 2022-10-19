@@ -1,6 +1,7 @@
 import { TextChannel, User } from "discord.js";
 import { ClickGame } from "./click";
 import { DiscordGame } from "./discordgame";
+import { TTTGame } from "./tictactoe";
 
 export enum GamePhase {
   Waiting = "waiting",
@@ -31,4 +32,5 @@ export type DiscordGameImpl = new (channel: TextChannel, creator: User) => Disco
 
 export const discordGames: Record<string, DiscordGameImpl> = {
   ClickGame,
+  TTTGame,
 };

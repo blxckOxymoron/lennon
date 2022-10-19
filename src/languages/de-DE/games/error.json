@@ -9,5 +9,8 @@
   "not_leader": "Du bist nicht der Spielleiter, sondern {{leader}}",
 
   "check_textChannel": "Dieser Kanal ist kein Textkanal",
-  "check_game": "Es läuft gerade kein Spiel in diesem Kanal"
+  "check_game": "Es läuft gerade kein Spiel in diesem Kanal",
+
+  "no_text_permissions": "Ich habe keine Berechtigung, in diesem Kanal zu schreiben",
+  "no_thread_permissions": "Ich habe keine Threads zu verwalten"
 }

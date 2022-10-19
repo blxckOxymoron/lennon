@@ -20,14 +20,7 @@ export class MoleculeCommand extends Command {
   }
 
   public override async chatInputRun(interaction: CommandInteraction) {
-    const query = interaction.options.getString("query")?.trim();
-
-    if (!query)
-      return interaction.reply(
-        ephemeralEmbed(
-          ThemedEmbeds.Error(await resolveKey(interaction, "error:with_code", { code: "no_query" }))
-        )
-      );
+    const query = interaction.options.getString("query", true).trim();
 
     const result = await findMolecule(query);
     if (!result)

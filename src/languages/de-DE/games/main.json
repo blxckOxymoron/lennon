@@ -2,8 +2,10 @@
   "player_join": ":arrow_right: {{player}} ist beigetreten.",
   "player_leave": ":arrow_left: {{player}} hat das Spiel verlassen.",
   "start": "Das Spiel startet.",
-  "end": "Das Spiel ist zu ende.",
+  "noone": "Niemand",
+  "end": "{{ winner }} hat gewonnen! Das Spiel ist zu ende.",
   "welcome": ":video_game: Willkommen bei {{game}}!",
   "create_success": "Spiel erfolfgreich erstellt.",
-  "start_success": "Spiel erfolgreich gestartet."
+  "start_success": "Spiel erfolgreich gestartet.",
+  "channel_explanation": ":video_game: Starte Spiele in diesem Kanal mit {{command}}! :video_game:"
 }

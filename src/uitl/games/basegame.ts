@@ -54,7 +54,8 @@ export abstract class Game<PlayerData, State, MoveData, Player = string> {
     this.timestamps.running = Date.now();
   }
 
-  public async end() {
+  // @ts-ignore
+  public async end(winner: Player | undefined = undefined) {
     if (this.phase !== GamePhase.Running) return;
     this.phase = GamePhase.Ended;
     this.timestamps.ended = Date.now();

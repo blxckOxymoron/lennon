@@ -22,7 +22,8 @@ export abstract class DiscordGame<P, S, M> extends Game<P, S, WithInteraction<M>
     this.playerJoin(creator);
   }
 
-  public async buttonHandler(_interaction: ButtonInteraction) {}
+  // @ts-ignore
+  public async buttonHandler(interaction: ButtonInteraction) {}
 
   public override async makeMove(
     player: User,
@@ -84,10 +85,18 @@ export abstract class DiscordGame<P, S, M> extends Game<P, S, WithInteraction<M>
     });
   }
 
-  public override async end() {
+  public override async end(winner: User | undefined) {
     await super.end();
+
+    const name =
+      winner === undefined
+        ? await resolveKey(this.channel, "games/main:noone")
+        : await this.channel.guild.members.fetch(winner).then(m => m.displayName);
+
     await this.channel.send({
-      embeds: [ThemedEmbeds.Primary(await resolveKey(this.channel, "games/main:end"))],
+      embeds: [
+        ThemedEmbeds.Primary(await resolveKey(this.channel, "games/main:end", { winner: name })),
+      ],
     });
     GameManager.removeGame(this); //? should this be here?
   }

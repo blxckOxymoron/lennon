@@ -69,7 +69,7 @@ export class ClickGame extends DiscordGame<
   }
 
   public override async end() {
-    await super.end();
+    await super.end(undefined);
 
     const resultFields: EmbedFieldData[] = Object.entries(this.data.favouriteColors).map(
       ([color, count]) => ({ name: emojis[color] ?? color, value: count.toString(), inline: true })
