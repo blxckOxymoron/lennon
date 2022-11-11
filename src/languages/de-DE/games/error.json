@@ -13,5 +13,6 @@
 
   "no_text_permissions": "Ich habe keine Berechtigung, in diesem Kanal zu schreiben",
   "no_thread_permissions": "Ich habe keine Threads zu verwalten",
-  "no_game_channel": "Der Admin des Servers muss zuerst einen Kanal für Spiele festlegen"
+  "no_game_channel": "Der Admin des Servers muss zuerst einen Kanal für Spiele festlegen",
+  "already_leading_game": "Du bist bereits Spielleiter eines anderen Spiels"
 }

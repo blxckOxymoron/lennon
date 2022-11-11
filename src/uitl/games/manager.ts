@@ -8,12 +8,23 @@ import { getGuildData } from "../data/guilds";
 class GameManager {
   games: DiscordGame<any, any, any>[] = [];
 
+  gameWithPlayer(id: string) {
+    return this.games.find(game => game.playerIds.includes(id));
+  }
+
+  gameWithLeader(id: string) {
+    return this.games.find(game => game.leaderId === id);
+  }
+
   async newGame(
     interaction: Interaction,
     gameImpl: DiscordGameImpl
   ): Promise<string | GuildTextBasedChannel> {
     const gID = interaction.guildId;
     if (gID === null) return "error:only_in_guild";
+
+    const isPlaying = this.gameWithLeader(interaction.user.id) !== undefined;
+    if (isPlaying) return "games/error:already_leading_game";
 
     const gData = await getGuildData(gID);
     if (gData.gameChannelId === null) return "games/error:no_game_channel";
