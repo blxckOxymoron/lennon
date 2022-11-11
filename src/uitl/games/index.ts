@@ -1,5 +1,4 @@
 import { ThreadChannel, User } from "discord.js";
-import { ClickGame } from "./click";
 import { DiscordGame } from "./discordgame";
 import { TicTacToe } from "./tictactoe";
 
@@ -31,6 +30,5 @@ export type DiscordGameImpl = new (channel: ThreadChannel, creator: User) => Dis
 >;
 
 export const discordGames: Record<string, DiscordGameImpl> = {
-  ClickGame,
   TicTacToe,
 };
