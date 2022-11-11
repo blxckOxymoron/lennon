@@ -1,7 +1,7 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import { resolveKey } from "@sapphire/plugin-i18next";
-import { CommandInteraction } from "discord.js";
+import { AutocompleteInteraction, CommandInteraction } from "discord.js";
 import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
 import { discordGames, GameManager, GamePhase } from "../../uitl/games";
 import { checkInteraction } from "../../uitl/games/checks";
@@ -18,9 +18,6 @@ import { checkInteraction } from "../../uitl/games/checks";
 })
 export class GameCommand extends Command {
   private async createGameRun(interaction: CommandInteraction) {
-    const { textChannel } = await checkInteraction(interaction, "textChannel");
-    if (!textChannel) return;
-
     const gameName = interaction.options.getString("game", true);
 
     const game = discordGames[gameName];
@@ -32,13 +29,19 @@ export class GameCommand extends Command {
       );
     }
 
+    const error = await GameManager.newGame(interaction, game);
+    if (typeof error === "string") {
+      // error
+      return await interaction.reply(
+        ephemeralEmbed(ThemedEmbeds.Error(await resolveKey(interaction, error)))
+      );
+    }
+
     await interaction.reply(
       ephemeralEmbed(
         ThemedEmbeds.Primary(await resolveKey(interaction, "games/main:create_success"))
       )
     );
-
-    GameManager.newGame(interaction, game);
   }
 
   private async startGameRun(interaction: CommandInteraction) {
@@ -71,9 +74,6 @@ export class GameCommand extends Command {
     );
   }
 
-  // @ts-ignore
-  private async setChannelRun(interaction: CommandInteraction) {}
-
   public override async chatInputRun(interaction: CommandInteraction) {
     switch (interaction.options.getSubcommand()) {
       case "create":
@@ -82,12 +82,17 @@ export class GameCommand extends Command {
       case "start":
         await this.startGameRun(interaction);
         break;
-      case "set-channel":
-        await this.setChannelRun(interaction);
-        break;
       default:
         this.container.logger.error("Unknown subcommand.");
     }
+  }
+
+  public override autocompleteRun(interaction: AutocompleteInteraction) {
+    const keys = Object.entries(discordGames).map(([key, game]) => ({
+      name: game.name,
+      value: key,
+    }));
+    interaction.respond(keys);
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
@@ -103,30 +108,14 @@ export class GameCommand extends Command {
               opt
                 .setName("game")
                 .setDescription("The game you want to play.")
-                .setChoices(
-                  ...Object.entries(discordGames).map(([key, game]) => ({
-                    name: game.name,
-                    value: key,
-                  }))
-                )
+                .setAutocomplete(true)
                 .setRequired(true)
             )
         )
         .addSubcommand(sub => sub.setName("start").setDescription("Start the game in the channel."))
-        .addSubcommand(sub =>
-          sub
-            .setName("set-channel")
-            .setDescription("Set the channel for games.")
-            .addChannelOption(opt =>
-              opt
-                .setName("channel")
-                .setDescription("The channel to play games in.")
-                .setRequired(true)
-            )
-        )
     ),
       {
-        idHints: ["1016735654014623846", "1032387026592485397"],
+        idHints: ["1016735654014623846", "1033767235547844689"],
         behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
       };
   }

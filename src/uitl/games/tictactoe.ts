@@ -1,4 +1,3 @@
-import { container } from "@sapphire/framework";
 import { ButtonInteraction, Message, MessageActionRow, MessageButton, User } from "discord.js";
 import { MessageButtonStyles } from "discord.js/typings/enums";
 import { ErrorOrMessage, MoveError, WithInteraction } from ".";
@@ -21,7 +20,7 @@ type Move = {
   y: number;
 };
 
-export class TTTGame extends DiscordGame<Playerdata, State, Move> {
+export class TicTacToe extends DiscordGame<Playerdata, State, Move> {
   public name: string = "TicTacToe";
   public override interactionPrefix: string = "ttt";
   public data: State = {
@@ -88,14 +87,14 @@ export class TTTGame extends DiscordGame<Playerdata, State, Move> {
   }
 
   private checkWin(): optId {
-    const board = this.data.board;
+    const b = this.data.board;
     for (let i = 0; i < 3; i++) {
       //* we can use `!` because i only ranges from 0 to 2
-      if (board[i]![0] === board[i]![1] && board[i]![1] === board[i]![2]) return board[i]![0];
-      if (board[0][i] === board[1][i] && board[1][i] === board[2][i]) return board[0][i]!;
+      if (b[i]![0] && b[i]![0] === b[i]![1] && b[i]![1] === b[i]![2]) return b[i]![0]; //! id must not be 0
+      if (b[0][i] && b[0][i] === b[1][i] && b[1][i] === b[2][i]) return b[0][i]!;
     }
-    if (board[0][0] === board[1][1] && board[1][1] === board[2][2]) return board[0][0];
-    if (board[0][2] === board[1][1] && board[1][1] === board[2][0]) return board[0][2];
+    if (b[0][0] && b[0][0] === b[1][1] && b[1][1] === b[2][2]) return b[0][0];
+    if (b[0][2] && b[0][2] === b[1][1] && b[1][1] === b[2][0]) return b[0][2];
     return undefined;
   }
 

@@ -1,7 +1,7 @@
-import { TextChannel, User } from "discord.js";
+import { ThreadChannel, User } from "discord.js";
 import { ClickGame } from "./click";
 import { DiscordGame } from "./discordgame";
-import { TTTGame } from "./tictactoe";
+import { TicTacToe } from "./tictactoe";
 
 export enum GamePhase {
   Waiting = "waiting",
@@ -24,7 +24,7 @@ export * from "./basegame";
 export * from "./discordgame";
 export { default as GameManager } from "./manager";
 
-export type DiscordGameImpl = new (channel: TextChannel, creator: User) => DiscordGame<
+export type DiscordGameImpl = new (channel: ThreadChannel, creator: User) => DiscordGame<
   any,
   any,
   any
@@ -32,5 +32,5 @@ export type DiscordGameImpl = new (channel: TextChannel, creator: User) => Disco
 
 export const discordGames: Record<string, DiscordGameImpl> = {
   ClickGame,
-  TTTGame,
+  TicTacToe,
 };

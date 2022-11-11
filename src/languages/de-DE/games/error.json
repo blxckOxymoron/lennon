@@ -12,5 +12,6 @@
   "check_game": "Es läuft gerade kein Spiel in diesem Kanal",
 
   "no_text_permissions": "Ich habe keine Berechtigung, in diesem Kanal zu schreiben",
-  "no_thread_permissions": "Ich habe keine Threads zu verwalten"
+  "no_thread_permissions": "Ich habe keine Threads zu verwalten",
+  "no_game_channel": "Der Admin des Servers muss zuerst einen Kanal für Spiele festlegen"
 }

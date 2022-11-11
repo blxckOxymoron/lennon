@@ -1,5 +1,10 @@
 import { resolveKey } from "@sapphire/plugin-i18next";
-import { ButtonInteraction, MessageComponentInteraction, TextChannel, User } from "discord.js";
+import {
+  ButtonInteraction,
+  GuildTextBasedChannel,
+  MessageComponentInteraction,
+  User,
+} from "discord.js";
 import { ErrorOrMessage, GameManager } from ".";
 import { ephemeralEmbed, ThemedEmbeds } from "../embeds";
 import { Game } from "./basegame";
@@ -10,13 +15,13 @@ export type WithInteraction<T> = T & {
 
 export abstract class DiscordGame<P, S, M> extends Game<P, S, WithInteraction<M>, User> {
   public interactionPrefix: string = "";
-  public channel: TextChannel;
+  public channel: GuildTextBasedChannel;
 
   public get leaderId() {
     return this.playerIds[0];
   }
 
-  constructor(channel: TextChannel, creator: User) {
+  constructor(channel: GuildTextBasedChannel, creator: User) {
     super();
     this.channel = channel;
     this.playerJoin(creator);

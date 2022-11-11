@@ -1,11 +1,11 @@
 import { resolveKey } from "@sapphire/plugin-i18next";
-import { CommandInteraction, TextChannel } from "discord.js";
+import { CommandInteraction, GuildTextBasedChannel } from "discord.js";
 import { GameManager } from ".";
 import { ephemeralEmbed, ThemedEmbeds } from "../embeds";
 import { DiscordGame } from "./discordgame";
 
 type CheckResult = {
-  textChannel: TextChannel | undefined;
+  textChannel: GuildTextBasedChannel | undefined;
   game: DiscordGame<any, any, any> | undefined;
 };
 
@@ -15,7 +15,10 @@ export async function checkInteraction(
   interaction: CommandInteraction,
   ...errorFor: Check[]
 ): Promise<CheckResult & { errors: Check[] }> {
-  const textChannel = interaction.channel instanceof TextChannel ? interaction.channel : undefined;
+  const textChannel =
+    interaction.channel?.isText() && interaction.channel.type !== "DM"
+      ? interaction.channel
+      : undefined;
 
   const game = textChannel ? GameManager.getGameForChannel(textChannel) : undefined;
 
@@ -51,9 +54,7 @@ async function sendErrors(
       ephemeralEmbed(
         ThemedEmbeds.Error(
           (await resolveKey(interaction, `games/error:check_${errorKeys[0]}`)) +
-            (errorKeys.length > 1)
-            ? ` (+ ${errorKeys.length - 1})`
-            : ""
+            (errorKeys.length > 1 ? ` (+ ${errorKeys.length - 1})` : "")
         )
       )
     );
