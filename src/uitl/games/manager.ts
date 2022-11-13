@@ -39,7 +39,7 @@ class GameManager {
     const gameMessage = await channel.send({
       embeds: [
         ThemedEmbeds.Primary(
-          await resolveKey(channel, "games/main:game_created", {
+          await resolveKey(channel, "games/main:play_with", {
             game: gameImpl.name,
             name: creatorName,
           })
@@ -63,6 +63,12 @@ class GameManager {
 
   removeGame(game: DiscordGame<any, any, any>) {
     this.games.splice(this.games.indexOf(game), 1);
+  }
+
+  removeGameForChannel(channel: GuildTextBasedChannel) {
+    this.games = this.games.filter(game => game.channel.id !== channel.id);
+    if (channel.isThread())
+      channel.fetchStarterMessage().then(m => setTimeout(() => m?.delete().catch(), 10e3));
   }
 
   getGameForChannel(channel: GuildTextBasedChannel) {

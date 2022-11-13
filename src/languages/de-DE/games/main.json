@@ -1,5 +1,4 @@
 {
-  "game_created": "Spiele {{game}} with {{name}}",
   "player_join": ":arrow_right: {{player}} ist beigetreten.",
   "player_leave": ":arrow_left: {{player}} hat das Spiel verlassen.",
   "start": "Das Spiel startet.",
@@ -9,5 +8,5 @@
   "create_success": "Spiel erfolfgreich erstellt.",
   "start_success": "Spiel erfolgreich gestartet.",
   "channel_explanation": ":video_game: Starte Spiele in diesem Kanal mit {{command}}! :video_game:",
-  "play_with": "Spiel mit {{player}} {{game}}"
+  "play_with": "Spiele {{game}} mit {{player}}"
 }
