@@ -21,8 +21,7 @@ model Image {
 }
 
 model Guild {
-  id            String  @id @default(cuid())
-  guildId       String  @unique
-  language      String  @default("en-US")
-  gameChannelId String?
+  id       String @id @default(cuid())
+  guildId  String @unique
+  language String @default("en-US")
 }
