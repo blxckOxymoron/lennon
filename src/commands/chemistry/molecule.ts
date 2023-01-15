@@ -73,7 +73,13 @@ export class MoleculeCommand extends Command {
     // autocomplete for query
     const options = await autocomplete(query);
 
-    return interaction.respond(options.map(k => ({ name: k, value: k })));
+    return interaction
+      .respond(options.map(k => ({ name: k, value: k })))
+      .catch(() =>
+        this.container.logger.warn(
+          `Autocomplete failed. To slow? (${Date.now() - interaction.createdTimestamp / 1000}s)`
+        )
+      );
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
