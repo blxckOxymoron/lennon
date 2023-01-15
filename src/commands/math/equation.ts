@@ -52,6 +52,11 @@ export class EquationCommand extends Command {
       attachment: render instanceof URL ? render.href : render,
     };
 
+    await interaction.followUp({
+      content: title ? `**${title}**` : null,
+      files: [attachment],
+    });
+
     if (render instanceof Buffer) {
       const imageMessage = await interaction.fetchReply();
       if (!(imageMessage.attachments instanceof Collection)) return;
@@ -71,11 +76,6 @@ export class EquationCommand extends Command {
         },
       });
     }
-
-    await interaction.followUp({
-      content: title ? `**${title}**` : null,
-      files: [attachment],
-    });
   }
 
   examples: ApplicationCommandOptionChoiceData[] = [
