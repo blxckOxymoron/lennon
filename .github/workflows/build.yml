@@ -37,6 +37,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     
+    environment:
+      name: discord-bot
+      url: https://discord.com/api/oauth2/authorize?client_id=968153914530750515&permissions=274877958144&scope=bot%20applications.commands
+    
     steps:
       - name: restart service to update
         uses: appleboy/ssh-action@master
