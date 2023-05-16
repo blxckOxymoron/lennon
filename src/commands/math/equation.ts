@@ -7,10 +7,10 @@ import {
   CommandInteraction,
   FileOptions,
 } from "discord.js";
-import { prisma } from "../../lib";
-import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
-import { CachedImage } from "../../uitl/image";
-import { generateImage, getTexName, texHash } from "../../uitl/math";
+import { prisma } from "../../lib/prisma.js";
+import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds.js";
+import { CachedImage } from "../../uitl/image/image.js";
+import { generateImage, getTexName, texHash } from "../../uitl/math/tex.js";
 
 type AdditionalData = {
   query: string;

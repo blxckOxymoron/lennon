@@ -2,8 +2,8 @@ import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import { resolveKey } from "@sapphire/plugin-i18next";
 import { AutocompleteInteraction, CommandInteraction } from "discord.js";
-import { nameAndVal } from "../../uitl/discord/interactions";
-import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
+import { nameAndVal } from "../../uitl/discord/interactions.js";
+import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds.js";
 
 @ApplyOptions<CommandOptions>({
   name: "timer",

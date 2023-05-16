@@ -2,6 +2,9 @@
   "name": "lennon",
   "version": "0.0.1",
   "main": "dist/main.js",
+  "engines": {
+    "node": ">=19.0.0"
+  },
   "scripts": {
     "install": "pnpm exec prisma generate",
     "build": "pnpm exec tsc",
@@ -22,7 +25,7 @@
     "chalk": "^5.0.1",
     "color": "^4.2.3",
     "discord-api-types": "^0.34.0",
-    "discord.js": "^13.10.3",
+    "discord.js": "^13.16.0",
     "dotenv": "^16.0.1",
     "openchemlib": "^7.4.3",
     "prisma": "^4.3.1",

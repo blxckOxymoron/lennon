@@ -1,6 +1,6 @@
-import molecule from "./molecule";
-import equation from "./equation";
-import timer from "./timer";
+import molecule from "./molecule.js";
+import equation from "./equation.js";
+import timer from "./timer.js";
 
 export type Tutorial = {
   name: string;

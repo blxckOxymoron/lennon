@@ -7,9 +7,9 @@ import {
 } from "@sapphire/framework";
 import { resolveKey } from "@sapphire/plugin-i18next";
 import { CommandInteraction } from "discord.js";
-import { getGuildData } from "../../uitl/data/guilds";
-import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
-import { PrimaryEmbed } from "../../uitl/embeds/primary";
+import { getGuildData } from "../../uitl/data/guilds.js";
+import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds.js";
+import { PrimaryEmbed } from "../../uitl/embeds.js";
 
 @ApplyOptions<CommandOptions>({
   name: "admin",

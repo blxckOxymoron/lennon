@@ -9,7 +9,6 @@
       "program": "${workspaceFolder}/src/main.ts",
       "request": "launch",
       "skipFiles": ["<node_internals>/**"],
-      "runtimeArgs": ["--experimental-specifier-resolution=node"],
       "type": "node",
       "console": "integratedTerminal",
       "outFiles": ["${workspaceFolder}/dist/**/*.js", "!**/node_modules/**"]

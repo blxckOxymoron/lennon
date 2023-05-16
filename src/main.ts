@@ -1,5 +1,5 @@
 import { container } from "@sapphire/framework";
-import { Lennon } from "./lib";
+import { Lennon } from "./lib/client.js";
 import "@sapphire/plugin-i18next/register";
 
 export const client = new Lennon();

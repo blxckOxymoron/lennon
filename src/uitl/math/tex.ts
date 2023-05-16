@@ -1,8 +1,8 @@
 import { createHash } from "crypto";
 import sharp from "sharp";
 import { URLSearchParams } from "url";
-import { prisma } from "../../lib";
-import { CachedImage, RenderFunction } from "../image";
+import { prisma } from "../../lib/prisma.js";
+import { CachedImage, RenderFunction } from "../image/image.js";
 
 type MathRenderer = RenderFunction<string>;
 

@@ -2,10 +2,10 @@ import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import { resolveKey } from "@sapphire/plugin-i18next";
 import { CommandInteraction } from "discord.js";
-import { invitePermissions } from "../../lib";
-import { nameAndVal } from "../../uitl/discord/interactions";
-import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
-import tutorials from "../../uitl/tutorials";
+import { invitePermissions } from "../../lib/client.js";
+import { nameAndVal } from "../../uitl/discord/interactions.js";
+import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds.js";
+import tutorials from "../../uitl/tutorials/tutorialStore.js";
 
 @ApplyOptions<CommandOptions>({
   name: "tutorial",

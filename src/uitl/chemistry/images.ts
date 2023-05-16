@@ -1,9 +1,10 @@
 import { Molecule } from "openchemlib";
 import sharp from "sharp";
-import { prisma } from "../../lib";
-import { moleculeHash } from "./molecule";
-import { CachedImage, recolorSVG } from "../image";
-import { RenderFunction } from "../image";
+import { prisma } from "../../lib/prisma.js";
+import { moleculeHash } from "./molecule.js";
+import { CachedImage } from "../image/image.js";
+import { recolorSVG } from "../image/color.js";
+import { RenderFunction } from "../image/image.js";
 
 type MoleculeRenderer = RenderFunction<Molecule>;
 

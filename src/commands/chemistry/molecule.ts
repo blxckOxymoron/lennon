@@ -2,10 +2,12 @@ import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions, RegisterBehavior } from "@sapphire/framework";
 import { resolveKey } from "@sapphire/plugin-i18next";
 import { AutocompleteInteraction, Collection, CommandInteraction, FileOptions } from "discord.js";
-import { prisma } from "../../lib";
-import { autocomplete, findMolecule, generateImage, moleculeHash } from "../../uitl/chemistry";
-import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds";
-import { CachedImage } from "../../uitl/image";
+import { prisma } from "../../lib/prisma.js";
+import { generateImage } from "../../uitl/chemistry/images.js";
+import { moleculeHash, findMolecule } from "../../uitl/chemistry/molecule.js";
+import { autocomplete } from "../../uitl/chemistry/search.js";
+import { ephemeralEmbed, ThemedEmbeds } from "../../uitl/embeds.js";
+import { CachedImage } from "../../uitl/image/image.js";
 
 @ApplyOptions<CommandOptions>({
   name: "molecule",

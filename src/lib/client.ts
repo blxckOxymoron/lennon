@@ -1,6 +1,6 @@
 import { LogLevel, SapphireClient, Logger } from "@sapphire/framework";
 import { Intents, InviteGenerationOptions, Permissions } from "discord.js";
-import { Config } from "./config";
+import { Config } from "./config.js";
 import chalk from "chalk";
 import { InternationalizationContext } from "@sapphire/plugin-i18next";
 
@@ -16,7 +16,7 @@ export class Lennon extends SapphireClient {
       ],
       loadDefaultErrorListeners: true,
       logger: {
-        instance: new ColorLogger(LogLevel.Info),
+        instance: new ColorLogger(LogLevel.Debug),
       },
       i18n: {
         fetchLanguage: async (context: InternationalizationContext) => {
@@ -46,7 +46,7 @@ export const invitePermissions: InviteGenerationOptions = {
   ],
 };
 
-class ColorLogger extends Logger {
+export class ColorLogger extends Logger {
   colors = {
     [LogLevel.Debug]: chalk.magentaBright.bold(">>"),
     [LogLevel.Info]: chalk.cyanBright.bold(">>"),

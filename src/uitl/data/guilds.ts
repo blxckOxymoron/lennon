@@ -1,5 +1,5 @@
 import { Guild } from "@prisma/client";
-import { prisma } from "../../lib";
+import { prisma } from "../../lib/prisma.js";
 
 /**
  *
